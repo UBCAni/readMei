@@ -1,16 +1,59 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function Input() {
-  const [data, setData] = useState(null);
-  function getData(val: any) {
-    setData(val.target.value);
-    console.warn(val.target.value);
-  }
+  const [data, setData] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    console.log("card read complete");
+    setData("");
+  };
+
+  useEffect(() => {
+    const keyDownHandler = (e: { key: string; preventDefault: () => void }) => {
+      console.log("User pressed: ", e.key);
+
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleSubmit(e);
+      } else {
+        if (inputRef.current != null) {
+          inputRef.current.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", keyDownHandler);
+
+    return () => {
+      document.removeEventListener("keydown", keyDownHandler);
+    };
+  });
+
   return (
-    <div className="Input">
-      <h1>readMei</h1>
-      <p>{data}</p>
-      <input type="text" onChange={getData} />
+    <div className="Input text-center">
+      <h1>
+        read<span className="text-blue">Mei</span>
+      </h1>
+      <div className="row g-3">
+        <div className="col-sm"></div>
+        <div className="col-sm">
+          <div className="form-floating">
+            <input
+              autoFocus
+              ref={inputRef}
+              type="password"
+              id="floatingInput"
+              className="form-control"
+              placeholder="Membership Number"
+              value={data}
+              onChange={(e) => setData(e.target.value)}
+            />
+            <label htmlFor="floatingInput">Membership Number</label>
+          </div>
+        </div>
+        <div className="col-sm"></div>
+      </div>
     </div>
   );
 }

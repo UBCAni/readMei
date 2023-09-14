@@ -1,30 +1,7 @@
-// Override Bootstrap's Sass default variables
-//
-// Nearly all variables in Bootstrap are written with the `!default` flag.
-// This allows you to override the default values of those variables before
-// you import Bootstrap's source Sass files.
-//
-// Overriding the default variable values is the best way to customize your
-// CSS without writing _new_ styles. For example, you can either change
-// `$body-color` or write more CSS that override's Bootstrap's CSS like so:
-// `body { color: red; }`.
-
-
-//
-// Bring in Bootstrap
-//
-
-// Option 1
-//
-// Import all of Bootstrap's CSS
-
 @import "bootstrap/scss/bootstrap";
+@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap');
 
-// Option 2
-//
-// Place variable overrides first, then import just the styles you need. Note that some stylesheets are required no matter what.
-
-// Toggle global options
+$font-family: 'Dela Gothic One', cursive;
 $enable-gradients: true;
 $enable-shadows: true;
 
@@ -78,6 +55,9 @@ $success: #7952b3;
 @import "bootstrap/scss/offcanvas"; // Requires transitions
 // @import "bootstrap/scss/placeholders";
 
+// Custom Styles
+@import "src/scss/fonts.scss";
+
 // Helpers
 // @import "bootstrap/scss/helpers";
 
@@ -85,5 +65,5 @@ $success: #7952b3;
 @import "bootstrap/scss/utilities/api";
 
 body {
-  padding: 1.5rem;
+  padding: 5rem;
 }
