@@ -6,5 +6,5 @@ A software for reading official UBCAni membership cards.
 
 In the root directory:
 
-- run `npm install`
-- run `npm run dev` to run the application at `http://localhost:5173/`
+- run `npm install && npm run dev`
+- open the application at `http://localhost:5173/`

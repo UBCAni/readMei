@@ -31,10 +31,7 @@ function Input() {
   });
 
   return (
-    <div className="Input text-center">
-      <h1>
-        read<span className="text-blue">Mei</span>
-      </h1>
+    <div>
       <div className="row g-3">
         <div className="col-sm"></div>
         <div className="col-sm">
