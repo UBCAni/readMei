@@ -12,7 +12,6 @@ function Input() {
   useEffect(() => {
     const keyDownHandler = (e: { key: string; preventDefault: () => void }) => {
       console.log("User pressed: ", e.key);
-
       if (e.key === "Enter") {
         e.preventDefault();
         handleSubmit(e);
@@ -39,9 +38,9 @@ function Input() {
             <input
               autoFocus
               ref={inputRef}
-              type="password"
+              type="text"
               id="floatingInput"
-              className="form-control"
+              className="form-control hidden-text"
               placeholder="Membership Number"
               value={data}
               onChange={(e) => setData(e.target.value)}
