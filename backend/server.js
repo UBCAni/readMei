@@ -1,12 +1,65 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const schema = require("./schema")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(cors());
 
-mongoose.connect('mongodb://localhost/readmei', { useNewUrlParser: true, useUnifiedTopology: true });
+const memberSchema = schema.MemberSchema
+const eventSchema = schema.EventSchema
+
+const { MongoClient } = require("mongodb");
+ 
+// Replace the following with your Atlas connection string                                                                                                                                        
+const url = "mongodb+srv://admin:admin@cluster0.7118wjd.mongodb.net/?retryWrites=true&w=majority";
+// Connect to your Atlas cluster
+const client = new MongoClient(url);
+async function run() {
+    try {
+        await client.connect();
+        console.log("Successfully connected to Atlas");
+        console.log(query().toString())
+    } catch (err) {
+        console.log(err.stack);
+    }
+}
+
+run()
+client.close()
+
+// mongoose.connect('mongodb+srv://admin:<admin>@cluster0.7118wjd.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
+
+app.get("/members", (request, response) => {
+    // request should look like {MEMBER_ID: "2023-2024 001"}
+    try {
+        let results
+        results = memberSchema.statics.find(request)
+        results.length() ? response.send(results) : response.status(404).send("No records found")
+    } catch {
+        response.status(404).send("Bad query")
+    }
+})
+
+app.get("/events", (request, response) => {
+    try {
+        results = eventSchema.statics.find(request.query)
+        results.length() ? response.send(results) : response.status(404).send("No records found")
+    } catch {
+        response.status(404).send("Bad query")
+    }
+})
+
+const members = client.db("UBCANI").collection("members")
+
+async function query() {
+    const results = await Promise.resolve(
+        members.find({MEMBER_ID: "2023-2024 1083"}).toArray()
+    )
+    console.log(results)
+}
+
 
 // const MemberSchema = new mongoose.Schema({
 //     date: String,
@@ -18,88 +71,6 @@ mongoose.connect('mongodb://localhost/readmei', { useNewUrlParser: true, useUnif
 //     paymentMethod: String,
 //   });
 
-const MemberSchema = new mongoose.Schema({
-    DATE: Date,
-    MEMBER_ID: String,
-    NAME: String,
-    EMAIL: String
-},
-{
-    statics: {
-        findById(id) {
-            return this.find({MEMBER_ID: id})
-        },
-        findByName(name) {
-            return this.find({NAME: name}) // maybe implement fuzzy
-        },
-        findByEmail(email) {
-            return this.find({EMAIL: email}) // maybe implement fuzzy
-        },
-        isValidEmail(email) {
-            return email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/) !== null
-        }
-    },
-    virtuals: {
-        joinYear: {
-            get() {
-                return this.DATE.getFullYear()
-            }
-        },
-        membershipNumber: {
-            // assumes that MEMBER_ID is in "YYYY-YYYY XX" format
-            get() {
-                return /[^ ]*$/.exec(this.MEMBER_ID)[0] // trust me bro
-            }
-        }
-    }
-})
-
-const EventSchema = new mongoose.Schema({
-    MEMBER_ID: String,
-    EVENT_NAME: String,
-    EVENT_DATE: Date,
-    ATTENDEE_TYPE: String
-},
-{
-    statics: {
-        getAllEvents(id) {
-            return this.find({MEMBER_ID: id})
-        },
-        getAllVolunteeredEvents(id) {
-            return this.find({MEMBER_ID: id, TYPE: "Volunteer"})
-        },
-        getAllEventsBetween(start = undefined, end) {
-            try {
-                return this.find({EVENT_DATE: {$gte: start, $lte: end}})
-            } catch {
-                return this.find({EVENT_DATE: {$gte: end}})
-            }
-        },
-        getAllEventsBefore(end) {
-            return this.find({EVENT_DATE: {$lte: end}})
-        },
-        getAllAttendees(name) {
-            let attendees = []
-            for (const i of this.find({EVENT_NAME: name})) {
-                attendees.push({
-                    NAME: i.NAME,
-                    MEMBER_ID: i.MEMBER_ID
-                })
-            }
-            return attendees
-        },
-        getAllVolunteers(name) {
-            let volunteers = []
-            for (const i of this.find({EVENT_NAME: name, ATTENDEE_TYPE: "Volunteer"})) {
-                volunteers.push({
-                    NAME: i.NAME,
-                    MEMBER_ID: i.MEMBER_ID
-                })
-            }
-            return volunteers
-        }
-    }
-})
   
 //   const Member = mongoose.model('Member', MemberSchema);
   
