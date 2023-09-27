@@ -1,4 +1,5 @@
-import Input from "./reader";
+import GetMemberContainer from "./get-member/components/index/container.tsx";
+import {getMemberApiCall} from "./get-member/components/index/api.ts";
 
 function App() {
   return (
@@ -6,7 +7,7 @@ function App() {
       <h1 className="display-1">
         read<span className="text-blue">メイ</span>
       </h1>
-      <Input />
+        <GetMemberContainer getMember={getMemberApiCall}/>
     </div>
   );
 }

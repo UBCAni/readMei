@@ -10,6 +10,28 @@ body {
     color: #32A2D2;
 }
 
+.text-charcoal-gray {
+    color: #36373d;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.left-justify {
+    text-align: left;
+}
+
+.left-pad-50 {
+    padding-left: 50px;
+}
+
+.centre-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .hidden-text {
     text-security: disc;
     -webkit-text-security: disc;
