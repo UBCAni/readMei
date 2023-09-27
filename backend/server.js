@@ -13,6 +13,21 @@ app.use(cors());
 let collections = {}
 let db
 
+const validData = {
+    members: {
+        MEMBER_ID: "",
+        DATE: "",
+        NAME: "",
+        EMAIL: ""
+    },
+    events: {
+        MEMBER_ID: "",
+        EVENT_NAME: "",
+        EVENT_DATE: "",
+        ATTENDEE_TYPE: ""
+    }
+}
+
 let url = fs.readFileSync("./secret.txt", {encoding: "utf8"})
 
 // Replace the following with your Atlas connection string                                                                                                                                        
@@ -116,14 +131,11 @@ async function query(collection, query) {
 }
 
 async function write(collection, query) {
+    if (!isValidQuery(collection, query)) return undefined
     const read_results = await Promise.resolve(
         client.db("UBCANI").collection(collection).find(query).toArray()
     )
-    const first_result = await Promise.resolve(
-        client.db("UBCANI").collection(collection).findOne()
-    )
     if (!read_results.length) {
-        if (!isValidQuery(query, Object.keys(first_result).length)) return undefined
         const results = await Promise.resolve(
             client.db("UBCANI").collection(collection).insertOne(query)
         )
@@ -132,11 +144,11 @@ async function write(collection, query) {
 }
 
 async function update(collection, query) {
+    if (!isValidQuery(collection, query)) return undefined
     const read_results = await Promise.resolve(
         client.db("UBCANI").collection(collection).find({MEMBER_ID: query.MEMBER_ID}).toArray()
     )
     if (read_results.length) {   
-        if (!isValidQuery(query, Object.keys(read_results[0]).length)) return undefined
         const results = await Promise.resolve(
             client.db("UBCANI").collection(collection).replaceOne({MEMBER_ID: query.MEMBER_ID}, query)
         )
@@ -144,11 +156,12 @@ async function update(collection, query) {
     }
 }
 
-function isValidQuery(query, length) {
-    if (Object.keys(query).length + 1 !== length) return false
-    for (const i of Object.values(query)) {
-        if (i === undefined) return false
+function isValidQuery(collection, query) {
+    const valid = Object.keys(validData[collection])
+    for (const i of valid) {
+        if (query[i] === undefined) return false
     }
+    if (Object.keys(query).length + 1 !== valid.length) return false
     return true
 }
 
