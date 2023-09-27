@@ -13,7 +13,7 @@ let collections
 let db
 
 // Replace the following with your Atlas connection string                                                                                                                                        
-const url = "mongodb+srv://admin:admin@cluster0.7118wjd.mongodb.net/?retryWrites=true&w=majority";
+const url = "lmfao we trolled";
 // Connect to your Atlas cluster
 const client = new MongoClient(url);
 async function run() {
