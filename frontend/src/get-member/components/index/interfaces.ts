@@ -8,6 +8,8 @@ export interface GetMemberResponse {
     email: string
     student_number: string
     join_year: string
+    weeklies_attended: number
+    times_volunteered: number
 }
 
 export interface GetMemberError {

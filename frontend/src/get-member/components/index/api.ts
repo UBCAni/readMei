@@ -7,7 +7,9 @@ const MOCK_MEMBER_1: GetMemberResponse = {
     name: "member",
     email: "member@ubcani.com",
     student_number: "123456789",
-    join_year: "2021-2022"
+    join_year: "2021-2022",
+    weeklies_attended: 1,
+    times_volunteered: 3
 }
 
 const MOCK_MEMBER_2: GetMemberResponse = {
@@ -15,7 +17,9 @@ const MOCK_MEMBER_2: GetMemberResponse = {
     name: "member2",
     email: "member2@ubcani.com",
     student_number: "987654321",
-    join_year: "2022-2023"
+    join_year: "2022-2023",
+    weeklies_attended: 5,
+    times_volunteered: 0
 }
 
 const MOCK_MAP: ReadonlyMap<string, GetMemberResponse> = new Map([
