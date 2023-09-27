@@ -3,42 +3,49 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const schema = require("./schema")
 const { MongoClient } = require("mongodb");
+const fs = require("fs")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(cors());
 
 
-let collections
+let collections = {}
 let db
 
+let url = fs.readFileSync("./secret.txt", {encoding: "utf8"})
+
 // Replace the following with your Atlas connection string                                                                                                                                        
-const url = "mongodb+srv://admin:admin@cluster0.7118wjd.mongodb.net/?retryWrites=true&w=majority";
+
 // Connect to your Atlas cluster
 const client = new MongoClient(url);
-async function run() {
+async function ready() {
     try {
-        await client.connect();
-        db = client.db("UBCANI")
-        collections.members = db.collection("members")
-        collections.events = db.collection("events")
-        console.log("Successfully connected to Atlas");
+        await client.connect().then(() => {
+            db = client.db("UBCANI")
+            collections.members = db.collection("members")
+            collections.events = db.collection("events")
+        })
     } catch (err) {
         throw err
     }
     if (db === undefined) throw new Error
     if (collections.members === undefined || collections.events === undefined) throw new Error
+    return true
 }
 
-run()
 
-// mongoose.connect('mongodb+srv://admin:<admin>@cluster0.7118wjd.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
+ready().then(() => {
+    console.log("Successfully connected to Atlas")
+})
 
 app.get("/members", (request, response) => {
     // request should look like {MEMBER_ID: "2023-2024 001"}
     try {
         let results
-        results = query("members", request)
+        query("members", request).then((r) => {
+            results = r
+        })
         results.length() ? response.send(results) : response.status(404).send("No records found")
     } catch {
         response.status(404).send("Bad query")
@@ -47,7 +54,10 @@ app.get("/members", (request, response) => {
 
 app.get("/events", (request, response) => {
     try {
-        results = query("events", request)
+        let results
+        query("events", request).then((r) => {
+            results = r
+        })
         results.length() ? response.send(results) : response.status(404).send("No records found")
     } catch {
         response.status(404).send("Bad query")
@@ -57,7 +67,7 @@ app.get("/events", (request, response) => {
 
 async function query(collection, query) {
     const results = await Promise.resolve(
-        collections[collection].find(query).toArray()
+        client.db("UBCANI").collection(collection).find(query).toArray()
     )
     return results
 }
