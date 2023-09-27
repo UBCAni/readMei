@@ -39,13 +39,42 @@ ready().then(() => {
     console.log("Successfully connected to Atlas")
 })
 
+update("members", {
+    DATE: Date.now(),
+    MEMBER_ID: "lolmao",
+    NAME: "HighTierKringe",
+    EMAIL: "kys@now.com"
+}).then(
+    (r) => {
+        query("members", {EMAIL: "kys@now.com"}).then((r) => {
+            console.log(r)
+        })
+    }
+)
+
+
+
 app.get("/members", (request, response) => {
-    // request should look like {MEMBER_ID: "2023-2024 001"}
+    // request should look like {type: "read/write/update", query: {MEMBER_ID: "2023-2024 001"}}
     try {
         let results
-        query("members", request).then((r) => {
-            results = r
-        })
+        switch (request.type) {
+            case "read":
+                query("members", request.query).then((r) => {
+                    results = r
+                })
+                break
+            case "write":
+                write("members", request.query).then((r) => {
+                    results = r
+                })
+                break
+            case "update":
+                update("members", request.query).then((r) => {
+                    results = r
+                })
+                break
+        }
         results.length() ? response.send(results) : response.status(404).send("No records found")
     } catch {
         response.status(404).send("Bad query")
@@ -55,9 +84,23 @@ app.get("/members", (request, response) => {
 app.get("/events", (request, response) => {
     try {
         let results
-        query("events", request).then((r) => {
-            results = r
-        })
+        switch (request.type) {
+            case "read":
+                query("events", request.query).then((r) => {
+                    results = r
+                })
+                break
+            case "write":
+                write("events", request.query).then((r) => {
+                    results = r
+                })
+                break
+            case "update":
+                update("events", request.query).then((r) => {
+                    results = r
+                })
+                break
+        }
         results.length() ? response.send(results) : response.status(404).send("No records found")
     } catch {
         response.status(404).send("Bad query")
@@ -72,6 +115,42 @@ async function query(collection, query) {
     return results
 }
 
+async function write(collection, query) {
+    const read_results = await Promise.resolve(
+        client.db("UBCANI").collection(collection).find(query).toArray()
+    )
+    const first_result = await Promise.resolve(
+        client.db("UBCANI").collection(collection).findOne()
+    )
+    if (!read_results.length) {
+        if (!isValidQuery(query, Object.keys(first_result).length)) return undefined
+        const results = await Promise.resolve(
+            client.db("UBCANI").collection(collection).insertOne(query)
+        )
+        return results
+    }
+}
+
+async function update(collection, query) {
+    const read_results = await Promise.resolve(
+        client.db("UBCANI").collection(collection).find({MEMBER_ID: query.MEMBER_ID}).toArray()
+    )
+    if (read_results.length) {   
+        if (!isValidQuery(query, Object.keys(read_results[0]).length)) return undefined
+        const results = await Promise.resolve(
+            client.db("UBCANI").collection(collection).replaceOne({MEMBER_ID: query.MEMBER_ID}, query)
+        )
+        return results
+    }
+}
+
+function isValidQuery(query, length) {
+    if (Object.keys(query).length + 1 !== length) return false
+    for (const i of Object.values(query)) {
+        if (i === undefined) return false
+    }
+    return true
+}
 
 // const MemberSchema = new mongoose.Schema({
 //     date: String,
