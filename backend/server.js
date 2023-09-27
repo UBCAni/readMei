@@ -2,16 +2,16 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const schema = require("./schema")
+const { MongoClient } = require("mongodb");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(cors());
 
-const memberSchema = schema.MemberSchema
-const eventSchema = schema.EventSchema
 
-const { MongoClient } = require("mongodb");
- 
+let collections
+let db
+
 // Replace the following with your Atlas connection string                                                                                                                                        
 const url = "mongodb+srv://admin:admin@cluster0.7118wjd.mongodb.net/?retryWrites=true&w=majority";
 // Connect to your Atlas cluster
@@ -19,15 +19,18 @@ const client = new MongoClient(url);
 async function run() {
     try {
         await client.connect();
+        db = client.db("UBCANI")
+        collections.members = db.collection("members")
+        collections.events = db.collection("events")
         console.log("Successfully connected to Atlas");
-        console.log(query().toString())
     } catch (err) {
-        console.log(err.stack);
+        throw err
     }
+    if (db === undefined) throw new Error
+    if (collections.members === undefined || collections.events === undefined) throw new Error
 }
 
 run()
-client.close()
 
 // mongoose.connect('mongodb+srv://admin:<admin>@cluster0.7118wjd.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -35,7 +38,7 @@ app.get("/members", (request, response) => {
     // request should look like {MEMBER_ID: "2023-2024 001"}
     try {
         let results
-        results = memberSchema.statics.find(request)
+        results = query("members", request)
         results.length() ? response.send(results) : response.status(404).send("No records found")
     } catch {
         response.status(404).send("Bad query")
@@ -44,20 +47,19 @@ app.get("/members", (request, response) => {
 
 app.get("/events", (request, response) => {
     try {
-        results = eventSchema.statics.find(request.query)
+        results = query("events", request)
         results.length() ? response.send(results) : response.status(404).send("No records found")
     } catch {
         response.status(404).send("Bad query")
     }
 })
 
-const members = client.db("UBCANI").collection("members")
 
-async function query() {
+async function query(collection, query) {
     const results = await Promise.resolve(
-        members.find({MEMBER_ID: "2023-2024 1083"}).toArray()
+        collections[collection].find(query).toArray()
     )
-    console.log(results)
+    return results
 }
 
 
