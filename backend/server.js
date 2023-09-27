@@ -72,7 +72,6 @@ async function query(collection, query) {
     return results
 }
 
-
 // const MemberSchema = new mongoose.Schema({
 //     date: String,
 //     name: String,
