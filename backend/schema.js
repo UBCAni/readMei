@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-export const MemberSchema = new mongoose.Schema({
+module.exports.MemberSchema = new mongoose.Schema({
     DATE: Date,
     MEMBER_ID: String,
     NAME: String,
@@ -30,7 +30,7 @@ export const MemberSchema = new mongoose.Schema({
     }
 })
 
-export const EventSchema = new mongoose.Schema({
+module.exports.EventSchema = new mongoose.Schema({
     MEMBER_ID: String,
     EVENT_NAME: String,
     EVENT_DATE: Date,
