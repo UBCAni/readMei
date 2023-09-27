@@ -1,6 +1,7 @@
 import {ReactElement} from "react";
 import {GetMemberResponse, GetMemberError} from "../index/interfaces.ts";
 import ResultPanel from "../result-panel/result-panel.tsx";
+import ErrorPanel from "../error-panel/error-panel.tsx";
 
 enum DisplayState {
     NOTHING,
@@ -21,25 +22,25 @@ const Display = (props: DisplayProps): ReactElement => {
     } else if (props.error) {
         state = DisplayState.ERROR
     }
+    
 
     switch (state) {
         case DisplayState.ERROR:
-            if (props.error?.status == 404) {
-                return (<h2>{`Member with ID ${props.member_id} not found`}</h2>)
-            } else {
-                return (<h2>{`An error occurred while fetching the member with ID ${props.member_id}`}</h2>)
-            }
+            return (<ErrorPanel status={props.error!.status}
+                                message={props.error!.message}
+                                member_id={props.error!.member_id}   />);
         case DisplayState.NOTHING:
             return (<></>)
-        case DisplayState.RESPONSE:
-            const response: GetMemberResponse = props.response!
+        case DisplayState.RESPONSE:            
             return (
                 <div className="row g-3">
                     <div className="col-2"/> {/* Left Padding */}
-                    <ResultPanel name={response.name}
-                                 email={response.email}
-                                 student_number={response.student_number}
-                                 join_year={response.join_year} />
+                    <ResultPanel name={props.response!.name}
+                                 email={props.response!.email}
+                                 student_number={props.response!.student_number}
+                                 join_year={props.response!.join_year} 
+                                 weeklies_attended={props.response!.weeklies_attended}
+                                 times_volunteered={props.response!.times_volunteered}/>
                     <div className="col-2"/> {/* Right Padding */}
             </div>)
     }
