@@ -9,10 +9,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(cors());
 
-
+// global collections and db variables for fast access
 let collections = {}
 let db
 
+// data schema
 const validData = {
     members: {
         MEMBER_ID: "",
@@ -28,9 +29,8 @@ const validData = {
     }
 }
 
-let url = fs.readFileSync("./secret.txt", {encoding: "utf8"})
-
-// Replace the following with your Atlas connection string                                                                                                                                        
+// secret key
+let url = fs.readFileSync("./secret.txt", {encoding: "utf8"})                                                                                                                                  
 
 // Connect to your Atlas cluster
 const client = new MongoClient(url);
@@ -44,16 +44,18 @@ async function ready() {
     } catch (err) {
         throw err
     }
+    // stop if variable gets assigned, but to undefined
     if (db === undefined) throw new Error
     if (collections.members === undefined || collections.events === undefined) throw new Error
     return true
 }
 
-
+// connect to atlas
 ready().then(() => {
     console.log("Successfully connected to Atlas")
 })
 
+// testing
 update("members", {
     DATE: Date.now(),
     MEMBER_ID: "lolmao",
@@ -68,11 +70,12 @@ update("members", {
 )
 
 
-
+// members route
 app.get("/members", (request, response) => {
     // request should look like {type: "read/write/update", query: {MEMBER_ID: "2023-2024 001"}}
     try {
         let results
+        // call right function based on request
         switch (request.type) {
             case "read":
                 query("members", request.query).then((r) => {
@@ -96,9 +99,11 @@ app.get("/members", (request, response) => {
     }
 })
 
+// events route
 app.get("/events", (request, response) => {
     try {
         let results
+        // call right function based on request
         switch (request.type) {
             case "read":
                 query("events", request.query).then((r) => {
@@ -122,20 +127,28 @@ app.get("/events", (request, response) => {
     }
 })
 
-
+// queries a collection with a query
+// query is a key value pair of what you want to match
 async function query(collection, query) {
+    // create the promise
     const results = await Promise.resolve(
+        // this value resolves to results
         client.db("UBCANI").collection(collection).find(query).toArray()
     )
     return results
 }
 
+// writes a query (data) to the collection
 async function write(collection, query) {
+    // validates data input
     if (!isValidQuery(collection, query)) return undefined
+    // check for duplicates
     const read_results = await Promise.resolve(
         client.db("UBCANI").collection(collection).find(query).toArray()
     )
+    // if the record doesn't exist in db yet
     if (!read_results.length) {
+        // write to db and returns a WriteResult()
         const results = await Promise.resolve(
             client.db("UBCANI").collection(collection).insertOne(query)
         )
@@ -143,12 +156,18 @@ async function write(collection, query) {
     }
 }
 
+// updates records, mainly for members collection only
+// always updates based on member id
+// only updates the first record found
 async function update(collection, query) {
+    // validates data input
     if (!isValidQuery(collection, query)) return undefined
+    // check if the entry actually exists
     const read_results = await Promise.resolve(
         client.db("UBCANI").collection(collection).find({MEMBER_ID: query.MEMBER_ID}).toArray()
     )
-    if (read_results.length) {   
+    if (read_results.length) {
+        // updates and returns a WriteResult()
         const results = await Promise.resolve(
             client.db("UBCANI").collection(collection).replaceOne({MEMBER_ID: query.MEMBER_ID}, query)
         )
@@ -156,11 +175,15 @@ async function update(collection, query) {
     }
 }
 
+// data validation
 function isValidQuery(collection, query) {
+    // get the right schema
     const valid = Object.keys(validData[collection])
+    // check if each key is defined
     for (const i of valid) {
         if (query[i] === undefined) return false
     }
+    // check if there are no additional keys
     if (Object.keys(query).length + 1 !== valid.length) return false
     return true
 }
