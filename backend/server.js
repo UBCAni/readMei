@@ -4,10 +4,17 @@ const mongoose = require('mongoose');
 const schema = require("./schema")
 const { MongoClient } = require("mongodb");
 const fs = require("fs")
+const http = require("http")
+const https = require("https")
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-app.use(cors());
+const PORT = process.env.PORT || 5000
+app.use(cors())
+app.use(express.json())
+
+app.listen(PORT, () => {
+    console.log("App is running on port " + PORT)
+})
 
 // global collections and db variables for fast access
 let collections = {}
@@ -55,76 +62,74 @@ ready().then(() => {
     console.log("Successfully connected to Atlas")
 })
 
-// testing
-update("members", {
-    DATE: Date.now(),
-    MEMBER_ID: "lolmao",
-    NAME: "HighTierKringe",
-    EMAIL: "kys@now.com"
-}).then(
-    (r) => {
-        query("members", {EMAIL: "kys@now.com"}).then((r) => {
-            console.log(r)
-        })
-    }
-)
 
+
+app.get("/test", (request, response) => {
+    console.log("hi from server")
+    response.send("hi from server")
+})
 
 // members route
-app.get("/members", (request, response) => {
-    // request should look like {type: "read/write/update", query: {MEMBER_ID: "2023-2024 001"}}
-    try {
+app.post("/members", (request, response) => {
+    // try/catch commented out for error spitting
+    // request should look like {type: "read/write/update", query: "NAME=XXXX&&EMAIL=XXXX&&STUDENT_NUMBER=XXXX"}
+    // try {
         let results
+        let query = splitQuery(request.query)
         // call right function based on request
         switch (request.type) {
             case "read":
-                query("members", request.query).then((r) => {
+                query("members", query).then((r) => {
                     results = r
                 })
                 break
             case "write":
-                write("members", request.query).then((r) => {
+                write("members", query).then((r) => {
                     results = r
                 })
                 break
             case "update":
-                update("members", request.query).then((r) => {
+                update("members", query).then((r) => {
                     results = r
                 })
                 break
         }
-        results.length() ? response.send(results) : response.status(404).send("No records found")
-    } catch {
-        response.status(404).send("Bad query")
-    }
+        response.send(results)
+        //results.length() ? response.send(results) : response.status(404).send("No records found")
+    // } catch {
+    //     response.status(404).send("Bad query")
+    // }
 })
 
 // events route
-app.get("/events", (request, response) => {
-    try {
+app.post("/events", (request, response) => {
+    // try/catch commented out for error spitting
+    // try {
         let results
+        let query = splitQuery(request.query)
         // call right function based on request
         switch (request.type) {
             case "read":
-                query("events", request.query).then((r) => {
+                query("events", query).then((r) => {
                     results = r
                 })
                 break
             case "write":
-                write("events", request.query).then((r) => {
+                write("events", query).then((r) => {
                     results = r
                 })
                 break
             case "update":
-                update("events", request.query).then((r) => {
+                update("events", query).then((r) => {
                     results = r
                 })
                 break
         }
-        results.length() ? response.send(results) : response.status(404).send("No records found")
-    } catch {
-        response.status(404).send("Bad query")
-    }
+        response.send(results)
+        //results.length() ? response.send(results) : response.status(404).send("No records found")
+    // } catch {
+    //     response.status(404).send("Bad query")
+    // }
 })
 
 // queries a collection with a query
@@ -186,6 +191,17 @@ function isValidQuery(collection, query) {
     // check if there are no additional keys
     if (Object.keys(query).length + 1 !== valid.length) return false
     return true
+}
+
+// query parser
+function splitQuery(query) {
+    let result = {}
+    const args = query.toString().split("&&")
+    for (const arg of args) {
+        const key_value = arg.split("=")
+        result[key_value[0]] = result[key_value[1]]
+    }
+    return result
 }
 
 // const MemberSchema = new mongoose.Schema({
