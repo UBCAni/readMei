@@ -73,7 +73,7 @@ app.get("/test", (request, response) => {
 app.get("/members", (request, response) => {
     try {
         let results
-        query("members", request.body).then((r) => {
+        query("members", {MEMBER_ID: request.body}).then((r) => {
             results = r
         })
         results.length() ? response.send(results) : response.status(404).send("No records found")
@@ -109,7 +109,7 @@ app.patch("/members", (request, response) => {
 app.get("/events", (request, response) => {
     try {
         let results
-        query("events", request.body).then((r) => {
+        query("events", {MEMBER_ID: request.body}).then((r) => {
             results = r
         })
         results.length() ? response.send(results) : response.status(404).send("No records found")
