@@ -70,66 +70,76 @@ app.get("/test", (request, response) => {
 })
 
 // members route
-app.post("/members", (request, response) => {
-    // try/catch commented out for error spitting
-    // request should look like {type: "read/write/update", query: "NAME=XXXX&&EMAIL=XXXX&&STUDENT_NUMBER=XXXX"}
-    // try {
+app.get("/members", (request, response) => {
+    try {
         let results
-        let query = splitQuery(request.query)
-        // call right function based on request
-        switch (request.type) {
-            case "read":
-                query("members", query).then((r) => {
-                    results = r
-                })
-                break
-            case "write":
-                write("members", query).then((r) => {
-                    results = r
-                })
-                break
-            case "update":
-                update("members", query).then((r) => {
-                    results = r
-                })
-                break
-        }
-        response.send(results)
-        //results.length() ? response.send(results) : response.status(404).send("No records found")
-    // } catch {
-    //     response.status(404).send("Bad query")
-    // }
+        query("members", request.body).then((r) => {
+            results = r
+        })
+        results.length() ? response.send(results) : response.status(404).send("No records found")
+    } catch {
+        response.status(404).send("Bad query")
+    }
 })
 
-// events route
-app.post("/events", (request, response) => {
-    // try/catch commented out for error spitting
-    // try {
+app.post("/members", (request, response) => {
+    try {
         let results
-        let query = splitQuery(request.query)
-        // call right function based on request
-        switch (request.type) {
-            case "read":
-                query("events", query).then((r) => {
-                    results = r
-                })
-                break
-            case "write":
-                write("events", query).then((r) => {
-                    results = r
-                })
-                break
-            case "update":
-                update("events", query).then((r) => {
-                    results = r
-                })
-                break
-        }
-        response.send(results)
-        //results.length() ? response.send(results) : response.status(404).send("No records found")
-    // } catch {
-    //     response.status(404).send("Bad query")
-    // }
+        write("members", request.body).then((r) => {
+            results = r
+        })
+        results.length() ? response.send(results) : response.status(404).send("No records found")
+    } catch {
+        response.status(500).send("Error writing record")
+    }
+})
+
+app.patch("/members", (request, response) => {
+    try {
+        let results
+        update("members", request.body).then((r) => {
+            results = r
+        })
+        results.length() ? response.send(results) : response.status(404).send("No records found")
+    } catch {
+        response.status(500).send("Error updating record")
+    }
+})
+
+app.get("/events", (request, response) => {
+    try {
+        let results
+        query("events", request.body).then((r) => {
+            results = r
+        })
+        results.length() ? response.send(results) : response.status(404).send("No records found")
+    } catch {
+        response.status(404).send("Bad query")
+    }
+})
+
+app.post("/events", (request, response) => {
+    try {
+        let results
+        write("events", request.body).then((r) => {
+            results = r
+        })
+        results.length() ? response.send(results) : response.status(404).send("No records found")
+    } catch {
+        response.status(500).send("Error writing record")
+    }
+})
+
+app.patch("/events", (request, response) => {
+    try {
+        let results
+        update("events", request.body).then((r) => {
+            results = r
+        })
+        results.length() ? response.send(results) : response.status(404).send("No records found")
+    } catch {
+        response.status(500).send("Error updating record")
+    }
 })
 
 // queries a collection with a query
