@@ -26,7 +26,8 @@ const validData = {
         MEMBER_ID: "",
         DATE: "",
         NAME: "",
-        EMAIL: ""
+        EMAIL: "",
+        STUDENT_NUMBER: ""
     },
     events: {
         MEMBER_ID: "",
@@ -70,73 +71,73 @@ app.get("/test", (request, response) => {
 })
 
 // members route
-app.get("/members", (request, response) => {
+app.get("/members", async (request, response) => {
     try {
-        let results
-        query("members", {MEMBER_ID: request.body}).then((r) => {
-            results = r
+        await Promise.resolve(
+            query("members", request.query)
+        ).then((r) => {
+            r.length ? response.send(r) : response.status(404).send("No records found")
         })
-        results.length() ? response.send(results) : response.status(404).send("No records found")
     } catch {
         response.status(404).send("Bad query")
     }
 })
 
-app.post("/members", (request, response) => {
+app.post("/members", async (request, response) => {
     try {
-        let results
-        write("members", request.body).then((r) => {
-            results = r
+        await Promise.resolve(
+            write("members", request.query)
+        ).then(() => {
+            response.send("Entry added")
         })
-        results.length() ? response.send(results) : response.status(404).send("No records found")
     } catch {
         response.status(500).send("Error writing record")
     }
 })
 
-app.patch("/members", (request, response) => {
+app.patch("/members", async (request, response) => {
     try {
-        let results
-        update("members", request.body).then((r) => {
-            results = r
+        await Promise.resolve(
+            update("members", request.query)
+        ).then((r) => {
+            response.send("Entry updated")
         })
-        results.length() ? response.send(results) : response.status(404).send("No records found")
     } catch {
         response.status(500).send("Error updating record")
     }
 })
 
-app.get("/events", (request, response) => {
+app.get("/events", async (request, response) => {
     try {
-        let results
-        query("events", {MEMBER_ID: request.body}).then((r) => {
-            results = r
+        await Promise.resolve(
+            query("events", request.query)
+        ).then((r) => {
+            r.length ? response.send(r) : response.status(404).send("No records found")
         })
-        results.length() ? response.send(results) : response.status(404).send("No records found")
     } catch {
         response.status(404).send("Bad query")
     }
 })
 
-app.post("/events", (request, response) => {
+app.post("/events", async (request, response) => {
     try {
-        let results
-        write("events", request.body).then((r) => {
-            results = r
+        await Promise.resolve(
+            write("events", request.query)
+        ).then(() => {
+            response.send("Entry added")
         })
-        results.length() ? response.send(results) : response.status(404).send("No records found")
     } catch {
         response.status(500).send("Error writing record")
     }
 })
 
-app.patch("/events", (request, response) => {
+app.patch("/events", async (request, response) => {
     try {
-        let results
-        update("events", request.body).then((r) => {
-            results = r
+        await Promise.resolve(
+            update("events", request.query)
+        ).then((r) => {
+            response.send("Entry updated")
         })
-        results.length() ? response.send(results) : response.status(404).send("No records found")
     } catch {
         response.status(500).send("Error updating record")
     }
