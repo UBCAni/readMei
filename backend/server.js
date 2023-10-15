@@ -99,7 +99,7 @@ app.patch("/members", async (request, response) => {
     try {
         await Promise.resolve(
             update("members", request.query)
-        ).then((r) => {
+        ).then(() => {
             response.send("Entry updated")
         })
     } catch {
@@ -135,7 +135,7 @@ app.patch("/events", async (request, response) => {
     try {
         await Promise.resolve(
             update("events", request.query)
-        ).then((r) => {
+        ).then(() => {
             response.send("Entry updated")
         })
     } catch {
