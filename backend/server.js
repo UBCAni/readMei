@@ -26,7 +26,8 @@ const validData = {
         MEMBER_ID: "",
         DATE: "",
         NAME: "",
-        EMAIL: ""
+        EMAIL: "",
+        STUDENT_NUMBER: ""
     },
     events: {
         MEMBER_ID: "",
@@ -70,66 +71,76 @@ app.get("/test", (request, response) => {
 })
 
 // members route
-app.post("/members", (request, response) => {
-    // try/catch commented out for error spitting
-    // request should look like {type: "read/write/update", query: "NAME=XXXX&&EMAIL=XXXX&&STUDENT_NUMBER=XXXX"}
-    // try {
-        let results
-        let query = splitQuery(request.query)
-        // call right function based on request
-        switch (request.type) {
-            case "read":
-                query("members", query).then((r) => {
-                    results = r
-                })
-                break
-            case "write":
-                write("members", query).then((r) => {
-                    results = r
-                })
-                break
-            case "update":
-                update("members", query).then((r) => {
-                    results = r
-                })
-                break
-        }
-        response.send(results)
-        //results.length() ? response.send(results) : response.status(404).send("No records found")
-    // } catch {
-    //     response.status(404).send("Bad query")
-    // }
+app.get("/members", async (request, response) => {
+    try {
+        await Promise.resolve(
+            query("members", request.query)
+        ).then((r) => {
+            r.length ? response.send(r) : response.status(404).send("No records found")
+        })
+    } catch {
+        response.status(404).send("Bad query")
+    }
 })
 
-// events route
-app.post("/events", (request, response) => {
-    // try/catch commented out for error spitting
-    // try {
-        let results
-        let query = splitQuery(request.query)
-        // call right function based on request
-        switch (request.type) {
-            case "read":
-                query("events", query).then((r) => {
-                    results = r
-                })
-                break
-            case "write":
-                write("events", query).then((r) => {
-                    results = r
-                })
-                break
-            case "update":
-                update("events", query).then((r) => {
-                    results = r
-                })
-                break
-        }
-        response.send(results)
-        //results.length() ? response.send(results) : response.status(404).send("No records found")
-    // } catch {
-    //     response.status(404).send("Bad query")
-    // }
+app.post("/members", async (request, response) => {
+    try {
+        await Promise.resolve(
+            write("members", request.query)
+        ).then(() => {
+            response.send("Entry added")
+        })
+    } catch {
+        response.status(500).send("Error writing record")
+    }
+})
+
+app.patch("/members", async (request, response) => {
+    try {
+        await Promise.resolve(
+            update("members", request.query)
+        ).then(() => {
+            response.send("Entry updated")
+        })
+    } catch {
+        response.status(500).send("Error updating record")
+    }
+})
+
+app.get("/events", async (request, response) => {
+    try {
+        await Promise.resolve(
+            query("events", request.query)
+        ).then((r) => {
+            r.length ? response.send(r) : response.status(404).send("No records found")
+        })
+    } catch {
+        response.status(404).send("Bad query")
+    }
+})
+
+app.post("/events", async (request, response) => {
+    try {
+        await Promise.resolve(
+            write("events", request.query)
+        ).then(() => {
+            response.send("Entry added")
+        })
+    } catch {
+        response.status(500).send("Error writing record")
+    }
+})
+
+app.patch("/events", async (request, response) => {
+    try {
+        await Promise.resolve(
+            update("events", request.query)
+        ).then(() => {
+            response.send("Entry updated")
+        })
+    } catch {
+        response.status(500).send("Error updating record")
+    }
 })
 
 // queries a collection with a query
