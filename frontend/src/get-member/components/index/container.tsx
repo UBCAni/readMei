@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement, useState } from "react";
 import { InputEvent } from "../../../common/interfaces.ts";
 import GetMember from "./get-member.tsx";
 import {GetMemberResponse, GetMemberError} from "./interfaces.ts";
@@ -6,64 +6,44 @@ import {GetMemberResponse, GetMemberError} from "./interfaces.ts";
 interface GetMemberContainerProps {
     getMember: (memberId: string) => Promise<GetMemberResponse>
 }
+const GetMemberContainer = (props:GetMemberContainerProps): ReactElement => {
+    const [memberId, setMemberId] = useState<string>("")
+    const [response, setResponse] = useState<GetMemberResponse | null>(null)
+    const [error, setError] = useState<GetMemberError | null>(null)
 
-interface GetMemberContainerState {
-    member_id: string
-    response: GetMemberResponse | null
-    error: GetMemberError | null
-}
-
-export class GetMemberContainer
-    extends React.Component<GetMemberContainerProps, GetMemberContainerState> {
-
-    constructor(props: GetMemberContainerProps) {
-        super(props);
-
-        this.state = {
-            member_id: "",
-            response: null,
-            error: null
-        }
+    const handleMemberId = (membershipId: string) => {
+        setMemberId(membershipId)
     }
-
-    setMemberId = (membershipId: string) => {
-        this.setState( { member_id: membershipId } )
+    const handleResponse = (response: GetMemberResponse) => {
+        setResponse(response)
+        setError(null)
     }
-
-    setResponse = (response: GetMemberResponse) => {
-        this.setState( { response, error: null } )
+    const handleError = (error: GetMemberError) => {
+        setError(error)
+        setResponse(null)
     }
-
-    setError = (error: GetMemberError) => {
-        this.setState( { response: null, error } )
+    const handleChange = (event: InputEvent<string>) => {
+        setMemberId(event.target.value)
     }
-
-    handleChange = (event: InputEvent<string>) => {
-        this.setMemberId(event.target.value)
-    }
-
-    handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        this.props.getMember(this.state.member_id).then((response: GetMemberResponse) => {
-                this.setResponse(response)
+
+        props.getMember(memberId).then((myresponse: GetMemberResponse) => {
+                handleResponse(myresponse)
             }
-        ).catch((error: GetMemberError) => {
-            this.setError(error)
+        ).catch((myerror: GetMemberError) => {
+            handleError(myerror)
         })
     }
-
-    override render() {
-        return (
-            <GetMember onSubmit={this.handleSubmit}
-                       inputText={this.state.member_id}
-                       onChange={this.handleChange}
-                       response={this.state.response}
-                       error={this.state.error}
-                       memberId={this.state.error?.member_id}
-            />
-        )
-    }
-
+    return (
+        <GetMember onSubmit={handleSubmit}
+                    inputText={memberId}
+                    onChange={handleChange}
+                    response={response}
+                    error={error}
+                    memberId={error?.member_id}
+        />
+    )
 }
 
 export default GetMemberContainer;
