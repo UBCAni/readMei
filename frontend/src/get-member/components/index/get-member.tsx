@@ -31,7 +31,7 @@ const GetMember = (props: GetMemberProps): ReactElement => {
             </div>
             <br/>
             <br/>
-            <Display member_id={props.memberId}
+            <Display membership_num={props.memberId}
                      response={props.response}
                      error={props.error}/>
         </div>
