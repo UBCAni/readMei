@@ -9,9 +9,6 @@ const MOCK_MEMBER_1: GetMemberResponse = {
     email: "member@ubcani.com",
     student_number: "123456789",
     member_id: 20232024001
-    // join_year: "2021-2022",
-    // weeklies_attended: 1,
-    // times_volunteered: 3
 }
 
 const MOCK_MEMBER_2: GetMemberResponse = {
@@ -20,9 +17,6 @@ const MOCK_MEMBER_2: GetMemberResponse = {
     email: "member2@ubcani.com",
     student_number: "987654321",
     member_id: 20232024002
-    // join_year: "2022-2023",
-    // weeklies_attended: 5,
-    // times_volunteered: 0
 }
 
 const MOCK_MAP: ReadonlyMap<string, GetMemberResponse> = new Map([
@@ -34,13 +28,13 @@ const MOCK_MAP: ReadonlyMap<string, GetMemberResponse> = new Map([
 export const getMemberApiCall = async (membership_num: string): Promise<GetMemberResponse> => {
     try {
         const response = await axios.get(`http://localhost:5000/members?MEMBERSHIP_NUMBER=${membership_num}`)
-        const response_data = response.data[0]
+        const { _id, DATE, MEMBERSHIP_NUMBER, NAME, EMAIL, STUDENT_NUMBER, MEMBER_ID } = response.data[0]
         const result: GetMemberResponse = {
-            membership_num: response_data.MEMBERSHIP_NUMBER,
-            name: response_data.NAME,
-            email: response_data.EMAIL,
-            student_number: response_data.STUDENT_NUMBER,
-            member_id: response_data.MEMBER_ID
+            membership_num: MEMBERSHIP_NUMBER,
+            name: NAME,
+            email: EMAIL,
+            student_number: STUDENT_NUMBER,
+            member_id: MEMBER_ID
         }
         return result
     } catch(error) {
@@ -48,15 +42,15 @@ export const getMemberApiCall = async (membership_num: string): Promise<GetMembe
     }
 }
 
-// export const getMemberApiCall = (membership_num: string): Promise<GetMemberResponse> => {
-//     return new Promise<GetMemberResponse>((resolve, reject) => {
-//         if (MOCK_MAP.has(membership_num)) {
-//             resolve(MOCK_MAP.get(membership_num)!)
-//         } else if (membership_num === GENERIC_ERROR_ID) {
-//             reject({status: 403, message: "Access Denied", membership_num: membership_num})
-//         } else {
-//             reject({status: 404, message: `Member ${membership_num} not found`, membership_num: membership_num})
-//         }
-//     })
-// }
+export const mockGetMemberApiCall = (membership_num: string): Promise<GetMemberResponse> => {
+    return new Promise<GetMemberResponse>((resolve, reject) => {
+        if (MOCK_MAP.has(membership_num)) {
+            resolve(MOCK_MAP.get(membership_num)!)
+        } else if (membership_num === GENERIC_ERROR_ID) {
+            reject({status: 403, message: "Access Denied", membership_num: membership_num})
+        } else {
+            reject({status: 404, message: `Member ${membership_num} not found`, membership_num: membership_num})
+        }
+    })
+}
 

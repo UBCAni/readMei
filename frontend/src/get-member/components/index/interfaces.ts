@@ -8,9 +8,10 @@ export interface GetMemberResponse {
     email: string
     student_number: string
     member_id: number
-    //join_year: string
-    //weeklies_attended: number
-    //times_volunteered: number
+    // TODO: add these fields when backend can provide
+    // join_year: string
+    // weeklies_attended: number
+    // times_volunteered: number
 }
 
 export interface GetMemberError {
