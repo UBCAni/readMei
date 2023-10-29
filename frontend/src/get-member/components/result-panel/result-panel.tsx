@@ -29,8 +29,7 @@ const ResultPanel = (props: ResultPanelProps): ReactElement => {
                 </div>
                 <hr className="border-5"/>
                 <br/>
-                <div className="align-content-center">
-                    <br />
+                <div className="left-pad-50 text-start">
                     <br />
                     {/* <h3 className="bold">Weeklies attended: {'HAAAAAAAAAA'}</h3>
                     <h3 className="bold">Times volunteered: {"ITEM2"}</h3>
@@ -38,15 +37,10 @@ const ResultPanel = (props: ResultPanelProps): ReactElement => {
                     <h3 className="bold">Times volunteered: {"ITEM2"}</h3>
                     <h3 className="bold">Times volunteered: {"ITEM2"}</h3>
                     <h3 className="bold">Times volunteered: {"ITEM2"}</h3> */}
-                    <table>
-                        <tr>
-                            <th>Name(s)</th>
-                        </tr>
-
-                        {props.halloween.map((entry: string, index: number) => {
-                            return (<tr><td key={index}>{entry}</td></tr>);
+                    <h2 className="bold">Name(s)</h2>
+                    {props.halloween.map((entry: string, index: number) => {
+                            return (<h3 > {index + 1}. {entry}</h3>);
                         })}
-                    </table>
                     <br/> <br/> <br/> <br/>
                 </div>
             </div>)
