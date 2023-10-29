@@ -153,7 +153,7 @@ app.get("/halloween", async (request, response) => {
                         emails.push(`${member.name}, ${member.email}`)
                     }
                 }
-                callback()
+                callback(emails)
             }
 
             const getNames = (callback) => {
