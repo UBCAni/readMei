@@ -1,11 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
-const schema = require("./schema")
 const { MongoClient } = require("mongodb");
-const fs = require("fs")
-const http = require("http")
-const https = require("https")
+const fs = require("fs");
+const csv_parse = require("csv-parse");
+const Fuse = require("fuse.js")
 
 const app = express();
 const PORT = process.env.PORT || 5000
@@ -15,6 +13,31 @@ app.use(express.json())
 app.listen(PORT, () => {
     console.log("App is running on port " + PORT)
 })
+
+// temporary load halloween data into memory
+function loadHalloweenData(callback) {
+    fs.createReadStream("data.csv")
+    .pipe(csv_parse.parse({delimiter: ","}))
+    .on("data", (row) => {
+        if (row[4] === "UBCAni Halloween Social: Anxiety") {
+            if (row[6] === "UBCAni Member Ticket") {
+                const nameData = row[22].split(/(?<=^\S+)\s/) // trust me bro
+                halloween.push(
+                    {
+                        first: nameData[0],
+                        last: nameData[1],
+                        name: row[22]
+                    }
+                )
+            }
+        }
+    })
+    .on("end", () => {
+        halloweenFuse = new Fuse(halloween, {keys: ["first", "last", "name"]})
+        callback()
+    })
+}
+
 
 // global collections and db variables for fast access
 let collections = {}
@@ -55,8 +78,17 @@ async function ready() {
     // stop if variable gets assigned, but to undefined
     if (db === undefined) throw new Error
     if (collections.members === undefined || collections.events === undefined) throw new Error
+
     return true
 }
+
+// temporary halloween stuff
+let halloween = []
+let halloweenFuse
+
+loadHalloweenData(() => {
+    console.log("All records loaded")
+})
 
 // connect to atlas
 ready().then(() => {
@@ -104,6 +136,27 @@ app.patch("/members", async (request, response) => {
         })
     } catch {
         response.status(500).send("Error updating record")
+    }
+})
+
+app.get("/halloween", async (request, response) => {
+    try {
+        await Promise.resolve(
+            query("members", request.query)
+        ).then((r) => {
+            const nameArray = r[0].split(" ")
+            for (const name of halloween) {
+                if (nameArray[1] === name.last) {
+                    return name.name
+                }
+            }
+            const results = halloweenFuse.search(nameArray[1])
+            resultArr = results.map(i => i.item.name)
+            resultArr.length = 10
+            return resultArr
+        })
+    } catch {
+        return
     }
 })
 
