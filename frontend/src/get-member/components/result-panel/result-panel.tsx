@@ -4,6 +4,7 @@ interface ResultPanelProps {
     name: string,
     email: string,
     student_number: string,
+    halloween: Array<string>
     //join_year: string,
     //weeklies_attended: number,
     //times_volunteered: number
@@ -28,11 +29,18 @@ const ResultPanel = (props: ResultPanelProps): ReactElement => {
                 </div>
                 <hr className="border-5"/>
                 <br/>
-                <div className="align-content-center">
+                <div className="left-pad-50 text-start">
                     <br />
-                    <br />
-                    {/* <h3 className="bold">Weeklies attended: {props.weeklies_attended}</h3>
-                    <h3 className="bold">Times volunteered: {props.times_volunteered}</h3> */}
+                    {/* <h3 className="bold">Weeklies attended: {'HAAAAAAAAAA'}</h3>
+                    <h3 className="bold">Times volunteered: {"ITEM2"}</h3>
+                    <h3 className="bold">Times volunteered: {"ITEM2"}</h3>
+                    <h3 className="bold">Times volunteered: {"ITEM2"}</h3>
+                    <h3 className="bold">Times volunteered: {"ITEM2"}</h3>
+                    <h3 className="bold">Times volunteered: {"ITEM2"}</h3> */}
+                    <h2 className="bold">Name(s)</h2>
+                    {props.halloween.map((entry: string, index: number) => {
+                            return (<h3 > {index + 1}. {entry}</h3>);
+                        })}
                     <br/> <br/> <br/> <br/>
                 </div>
             </div>)
