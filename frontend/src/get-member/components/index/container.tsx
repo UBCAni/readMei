@@ -37,6 +37,8 @@ const GetMemberContainer = (props:GetMemberContainerProps): ReactElement => {
             console.log(myerror)
             handleError(myerror)
         })
+        // auto clears the membership field after submitting
+        setMembershipNum("")
     }
     return (
         <GetMember onSubmit={handleSubmit}
