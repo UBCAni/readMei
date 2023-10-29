@@ -143,28 +143,43 @@ app.get("/halloween", async (request, response) => {
         await Promise.resolve(
             query("members", request.query)
         ).then((r) => {
-            // match by email
             const email = r[0].EMAIL
-            let emails = []
-            for (const member of halloween) {
-                if (email === member.email) emails.push(`${member.name}, ${member.email}`)
-            }
-            if (emails.length) {
-                response.send(emails)
-                return
-            }
-            
-            // match by name
-            const nameArray = r[0].NAME.split(/(?<=^\S+)\s/)
-            let matching_names = []
-            for (const member of halloween) {
-                if (nameArray[0] === member.first || nameArray[1] === member.last) matching_names.push(`${member.name}, ${member.email}`)
-            }
-            if (matching_names.length) {
-                response.send(matching_names)
-                return
+            const nameArray = r[0].split(/(?<=^\S+)\s/)
+
+            const getEmails = (callback) => {
+                let emails = []
+                for (const member of halloween) {
+                    if (email === member.email) {
+                        emails.push(`${member.name}, ${member.email}`)
+                    }
+                }
+                callback()
             }
 
+            const getNames = (callback) => {
+                let matching_names = []
+                for (const member of halloween) {
+                    console.log(member.name)
+                    if (nameArray[0] === member.first || nameArray[1] === member.last) matching_names.push(`${member.name}, ${member.email}`)
+                }
+                callback(matching_names)
+            }
+
+            // match by email
+            getEmails((emails) => {
+                if (emails.length) {
+                    response.send(emails)
+                    return
+                }
+            })
+            
+            // match by name
+            getNames((matching_names) => {
+                if (matching_names.length) {
+                    response.send(matching_names)
+                    return
+                }
+            })
             // fuzzy match by full name
             const results = halloweenFuse.search(r[0].NAME, {limit: 10})
             resultArr = results.map(i => i.item.name)
