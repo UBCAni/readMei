@@ -147,7 +147,7 @@ app.get("/halloween", async (request, response) => {
             const email = r[0].EMAIL
             let emails = []
             for (const member of halloween) {
-                if (email === member.email) emails.push(member.name)
+                if (email === member.email) emails.push(`${member.name}, ${member.email}`)
             }
             if (emails.length) {
                 response.send(emails)
@@ -158,7 +158,7 @@ app.get("/halloween", async (request, response) => {
             const nameArray = r[0].NAME.split(/(?<=^\S+)\s/)
             let matching_names = []
             for (const member of halloween) {
-                if (nameArray[0] === member.first || nameArray[1] === member.last) matching_names.push(member.name)
+                if (nameArray[0] === member.first || nameArray[1] === member.last) matching_names.push(`${member.name}, ${member.email}`)
             }
             if (matching_names.length) {
                 response.send(matching_names)
