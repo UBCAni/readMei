@@ -144,18 +144,17 @@ app.get("/halloween", async (request, response) => {
         await Promise.resolve(
             query("members", request.query)
         ).then((r) => {
-            const nameArray = r[0].split(" ")
+            const nameArray = r[0].NAME.split(" ")
             for (const name of halloween) {
                 if (nameArray[1] === name.last) {
                     return name.name
                 }
             }
-            const results = halloweenFuse.search(nameArray[1])
+            const results = halloweenFuse.search(nameArray[1], 10)
             resultArr = results.map(i => i.item.name)
-            resultArr.length = 10
             response.send(resultArr)
         })
-    } catch {
+    } catch (err) {
         response.status(500).send("Error getting data")
     }
 })
