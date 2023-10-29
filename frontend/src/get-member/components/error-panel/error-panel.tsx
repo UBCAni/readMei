@@ -3,16 +3,16 @@ import {ReactElement} from "react";
 interface ErrorPanelProps {
     status: number,
     message: string,
-    membership_num: string
+    membershipNum: string
 }
 
 
 const ErrorPanel = (props : ErrorPanelProps) : ReactElement => {
     const errorMessage = () => {
         if (props.status == 404) {
-            return `Member with ID ${props.membership_num} not found`;
+            return `Member with ID ${props.membershipNum} not found`;
         } else {
-            return `An error occurred while fetching the member with ID ${props.membership_num}`;
+            return `An error occurred while fetching the member with ID ${props.membershipNum}`;
         }
     }
     return (

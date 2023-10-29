@@ -1,18 +1,19 @@
 import React, { ReactElement, useState } from "react";
 import { InputEvent } from "../../../common/interfaces.ts";
 import GetMember from "./get-member.tsx";
-import {GetMemberResponse, GetMemberError} from "./interfaces.ts";
+import { GetMemberResponse, GetMemberError } from "./interfaces.ts";
+import { convertInput } from "../../../common/utils/convertInput.ts";
 
 interface GetMemberContainerProps {
-    getMember: (memberId: string) => Promise<GetMemberResponse>
+    getMember: (membershipNum: string) => Promise<GetMemberResponse>
 }
 const GetMemberContainer = (props:GetMemberContainerProps): ReactElement => {
-    const [memberId, setMemberId] = useState<string>("")
+    const [membershipNum, setMembershipNum] = useState<string>("")
     const [response, setResponse] = useState<GetMemberResponse | null>(null)
     const [error, setError] = useState<GetMemberError | null>(null)
 
-    const handleMemberId = (membershipId: string) => {
-        setMemberId(membershipId)
+    const handleMembershipNum = (membershipNum: string) => {
+        setMembershipNum(membershipNum)
     }
     const handleResponse = (response: GetMemberResponse) => {
         setResponse(response)
@@ -23,12 +24,13 @@ const GetMemberContainer = (props:GetMemberContainerProps): ReactElement => {
         setResponse(null)
     }
     const handleChange = (event: InputEvent<string>) => {
-        setMemberId(event.target.value)
+        setMembershipNum(event.target.value)
     }
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        props.getMember(memberId).then((myresponse: GetMemberResponse) => {
+        
+        const strippedNum = convertInput(membershipNum)
+        props.getMember(strippedNum).then((myresponse: GetMemberResponse) => {
                 handleResponse(myresponse)
             }
         ).catch((myerror: GetMemberError) => {
@@ -38,11 +40,11 @@ const GetMemberContainer = (props:GetMemberContainerProps): ReactElement => {
     }
     return (
         <GetMember onSubmit={handleSubmit}
-                    inputText={memberId}
+                    inputText={membershipNum}
                     onChange={handleChange}
                     response={response}
                     error={error}
-                    memberId={error?.membership_num}
+                    membershipNum={error?.membership_num}
         />
     )
 }
