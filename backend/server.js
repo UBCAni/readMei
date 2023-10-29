@@ -144,7 +144,8 @@ app.get("/halloween", async (request, response) => {
             query("members", request.query)
         ).then((r) => {
             const email = r[0].EMAIL
-            const nameArray = r[0].split(/(?<=^\S+)\s/)
+            const nameArray = r[0].NAME.split(/(?<=^\S+)\s/)
+            
             const getEmails = (callback) => {
                 let emails = []
                 for (const member of halloween) {
