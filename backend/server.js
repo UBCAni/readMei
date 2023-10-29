@@ -178,11 +178,13 @@ app.get("/halloween", async (request, response) => {
                         response.send(matching_names)
                         return
                     }
-                    // fuzzy match by full name
-                    const results = halloweenFuse.search(nameArray[1], {limit: 10})
-                    resultArr = results.map(i => i.item.name)
-                    console.log("had to fuzzy match: " + resultArr)
-                    response.send(resultArr)
+                    else {
+                        // fuzzy match by full name
+                        const results = halloweenFuse.search(nameArray[1], {limit: 10})
+                        resultArr = results.map(i => i.item.name)
+                        console.log("had to fuzzy match: " + resultArr)
+                        response.send(resultArr)
+                    }
                 })
             })
         })
