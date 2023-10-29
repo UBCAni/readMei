@@ -32,6 +32,7 @@ const GetMemberContainer = (props:GetMemberContainerProps): ReactElement => {
                 handleResponse(myresponse)
             }
         ).catch((myerror: GetMemberError) => {
+            console.log(myerror)
             handleError(myerror)
         })
     }
@@ -41,7 +42,7 @@ const GetMemberContainer = (props:GetMemberContainerProps): ReactElement => {
                     onChange={handleChange}
                     response={response}
                     error={error}
-                    memberId={error?.member_id}
+                    memberId={error?.membership_num}
         />
     )
 }
