@@ -145,7 +145,6 @@ app.get("/halloween", async (request, response) => {
         ).then((r) => {
             const email = r[0].EMAIL
             const nameArray = r[0].split(/(?<=^\S+)\s/)
-
             const getEmails = (callback) => {
                 let emails = []
                 for (const member of halloween) {
@@ -155,37 +154,37 @@ app.get("/halloween", async (request, response) => {
                 }
                 callback(emails)
             }
-
+        
             const getNames = (callback) => {
                 let matching_names = []
                 for (const member of halloween) {
-                    console.log(member.name)
                     if (nameArray[0] === member.first || nameArray[1] === member.last) matching_names.push(`${member.name}, ${member.email}`)
                 }
                 callback(matching_names)
             }
-
+        
             // match by email
             getEmails((emails) => {
                 if (emails.length) {
+                    console.log("found a matching email: " + emails)
                     response.send(emails)
                     return
                 }
                 // match by name
                 getNames((matching_names) => {
                     if (matching_names.length) {
+                        console.log("found a matching name: " + matching_names)
                         response.send(matching_names)
                         return
                     }
+                    // fuzzy match by full name
+                    const results = halloweenFuse.search("James MacNeill", {limit: 10})
+                    resultArr = results.map(i => i.item.name)
+                    console.log("had to fuzzy match: " + resultArr)
+                    response.send(resultArr)
                 })
             })
-            
-            
-            // fuzzy match by full name
-            const results = halloweenFuse.search(r[0].NAME, {limit: 10})
-            resultArr = results.map(i => i.item.name)
-            response.send(resultArr)}
-        )
+        })
     } catch (err) {
         response.status(500).send("Error getting data")
     }
