@@ -171,15 +171,16 @@ app.get("/halloween", async (request, response) => {
                     response.send(emails)
                     return
                 }
+                // match by name
+                getNames((matching_names) => {
+                    if (matching_names.length) {
+                        response.send(matching_names)
+                        return
+                    }
+                })
             })
             
-            // match by name
-            getNames((matching_names) => {
-                if (matching_names.length) {
-                    response.send(matching_names)
-                    return
-                }
-            })
+            
             // fuzzy match by full name
             const results = halloweenFuse.search(r[0].NAME, {limit: 10})
             resultArr = results.map(i => i.item.name)
