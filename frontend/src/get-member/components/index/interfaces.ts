@@ -8,6 +8,7 @@ export interface GetMemberResponse {
     email: string
     student_number: string
     member_id: number
+    halloween: Array<string>
     // TODO: add these fields when backend can provide
     // join_year: string
     // weeklies_attended: number

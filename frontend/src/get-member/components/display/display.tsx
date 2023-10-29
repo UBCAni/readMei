@@ -37,7 +37,8 @@ const Display = (props: DisplayProps): ReactElement => {
                     <div className="col-2"/> {/* Left Padding */}
                     <ResultPanel name={props.response!.name}
                                  email={props.response!.email}
-                                 student_number={props.response!.student_number}/>
+                                 student_number={props.response!.student_number}
+                                 halloween={props.response!.halloween}/>
                                  {/* join_year={props.response!.join_year} 
                                  weeklies_attended={props.response!.weeklies_attended}
                                  times_volunteered={props.response!.times_volunteered} */}

@@ -19,21 +19,20 @@ function loadHalloweenData(callback) {
     fs.createReadStream("data.csv")
     .pipe(csv_parse.parse({delimiter: ","}))
     .on("data", (row) => {
-        if (row[4] === "UBCAni Halloween Social: Anxiety") {
-            if (row[6] === "UBCAni Member Ticket") {
-                const nameData = row[22].split(/(?<=^\S+)\s/) // trust me bro
-                halloween.push(
-                    {
-                        first: nameData[0],
-                        last: nameData[1],
-                        name: row[22]
-                    }
-                )
-            }
+        if (row[24] === "UBCAni Halloween Social: Anxiety" && row[26] === "UBCAni Member Ticket") {
+            const nameData = row[14].split(/(?<=^\S+)\s/) // trust me bro
+            halloween.push(
+                {
+                    first: nameData[0],
+                    last: nameData[1],
+                    name: row[14],
+                    email: row[15]
+                }
+            )
         }
     })
     .on("end", () => {
-        halloweenFuse = new Fuse(halloween, {keys: ["first", "last", "name"]})
+        halloweenFuse = new Fuse(halloween, {keys: ["first", "last", "name", "email"]})
         callback()
     })
 }
@@ -144,21 +143,33 @@ app.get("/halloween", async (request, response) => {
         await Promise.resolve(
             query("members", request.query)
         ).then((r) => {
-            const nameArray = r[0].NAME.split(" ")
+            // match by email
+            const email = r[0].EMAIL
+            let emails = []
+            for (const member of halloween) {
+                if (email === member.email) emails.push(member.name)
+            }
+            if (emails.length) {
+                response.send(emails)
+                return
+            }
+            
+            // match by name
+            const nameArray = r[0].NAME.split(/(?<=^\S+)\s/)
             let matching_names = []
-            for (const name of halloween) {
-                if (nameArray[1] === name.last) {
-                    matching_names.push(name.name)
-                }
+            for (const member of halloween) {
+                if (nameArray[0] === member.first || nameArray[1] === member.last) matching_names.push(member.name)
             }
             if (matching_names.length) {
                 response.send(matching_names)
                 return
             }
-            const results = halloweenFuse.search(nameArray[1], 10)
+
+            // fuzzy match by full name
+            const results = halloweenFuse.search(r[0].NAME, {limit: 10})
             resultArr = results.map(i => i.item.name)
-            response.send(resultArr)
-        })
+            response.send(resultArr)}
+        )
     } catch (err) {
         response.status(500).send("Error getting data")
     }
