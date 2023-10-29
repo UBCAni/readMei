@@ -9,7 +9,7 @@ interface GetMemberProps {
     onSubmit: FormEventHandler<HTMLFormElement>
     response: GetMemberResponse | null
     error: GetMemberError | null
-    memberId?: string
+    membershipNum?: string
 }
 
 const GetMember = (props: GetMemberProps): ReactElement => {
@@ -31,7 +31,7 @@ const GetMember = (props: GetMemberProps): ReactElement => {
             </div>
             <br/>
             <br/>
-            <Display membership_num={props.memberId}
+            <Display membershipNum={props.membershipNum}
                      response={props.response}
                      error={props.error}/>
         </div>
