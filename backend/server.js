@@ -151,7 +151,10 @@ app.get("/halloween", async (request, response) => {
                     matching_names.push(name.name)
                 }
             }
-            if (matching_names.length) return matching_names
+            if (matching_names.length) {
+                response.send(matching_names)
+                return
+            }
             const results = halloweenFuse.search(nameArray[1], 10)
             resultArr = results.map(i => i.item.name)
             response.send(resultArr)
