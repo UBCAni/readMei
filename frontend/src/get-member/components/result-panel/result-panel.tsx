@@ -4,9 +4,9 @@ interface ResultPanelProps {
     name: string,
     email: string,
     student_number: string,
-    join_year: string,
-    weeklies_attended: number,
-    times_volunteered: number
+    //join_year: string,
+    //weeklies_attended: number,
+    //times_volunteered: number
 }
 
 const ResultPanel = (props: ResultPanelProps): ReactElement => {
@@ -22,17 +22,17 @@ const ResultPanel = (props: ResultPanelProps): ReactElement => {
                             <h4 className="bold">Student #: {props.student_number}</h4>
                         </div>
                     </div>
-                    <div className="col-sm centre-container">
+                    {/* <div className="col-sm centre-container">
                         <h4 className="bold align-content-center">Member Since {props.join_year}</h4>
-                    </div>
+                    </div> */}
                 </div>
                 <hr className="border-5"/>
                 <br/>
                 <div className="align-content-center">
                     <br />
                     <br />
-                    <h3 className="bold">Weeklies attended: {props.weeklies_attended}</h3>
-                    <h3 className="bold">Times volunteered: {props.times_volunteered}</h3>
+                    {/* <h3 className="bold">Weeklies attended: {props.weeklies_attended}</h3>
+                    <h3 className="bold">Times volunteered: {props.times_volunteered}</h3> */}
                     <br/> <br/> <br/> <br/>
                 </div>
             </div>)

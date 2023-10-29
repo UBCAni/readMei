@@ -9,7 +9,7 @@ enum DisplayState {
     RESPONSE
 }
 interface DisplayProps {
-    member_id?: string
+    membershipNum?: string
     response: GetMemberResponse | null
     error: GetMemberError | null
 }
@@ -28,7 +28,7 @@ const Display = (props: DisplayProps): ReactElement => {
         case DisplayState.ERROR:
             return (<ErrorPanel status={props.error!.status}
                                 message={props.error!.message}
-                                member_id={props.error!.member_id}   />);
+                                membershipNum={props.error!.membership_num}   />);
         case DisplayState.NOTHING:
             return (<></>)
         case DisplayState.RESPONSE:            
@@ -37,10 +37,10 @@ const Display = (props: DisplayProps): ReactElement => {
                     <div className="col-2"/> {/* Left Padding */}
                     <ResultPanel name={props.response!.name}
                                  email={props.response!.email}
-                                 student_number={props.response!.student_number}
-                                 join_year={props.response!.join_year} 
+                                 student_number={props.response!.student_number}/>
+                                 {/* join_year={props.response!.join_year} 
                                  weeklies_attended={props.response!.weeklies_attended}
-                                 times_volunteered={props.response!.times_volunteered}/>
+                                 times_volunteered={props.response!.times_volunteered} */}
                     <div className="col-2"/> {/* Right Padding */}
             </div>)
     }

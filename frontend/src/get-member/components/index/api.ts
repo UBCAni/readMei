@@ -1,40 +1,55 @@
 import { GetMemberResponse} from "./interfaces.ts";
+import axios from "axios";
 
 const GENERIC_ERROR_ID = "error"
 
 const MOCK_MEMBER_1: GetMemberResponse = {
-    member_id: "2023-2024 001",
+    membership_num: "2023-2024 001",
     name: "member",
     email: "member@ubcani.com",
     student_number: "123456789",
-    join_year: "2021-2022",
-    weeklies_attended: 1,
-    times_volunteered: 3
+    member_id: 20232024001
 }
 
 const MOCK_MEMBER_2: GetMemberResponse = {
-    member_id: "2023-2024 002",
+    membership_num: "2023-2024 002",
     name: "member2",
     email: "member2@ubcani.com",
     student_number: "987654321",
-    join_year: "2022-2023",
-    weeklies_attended: 5,
-    times_volunteered: 0
+    member_id: 20232024002
 }
 
 const MOCK_MAP: ReadonlyMap<string, GetMemberResponse> = new Map([
-    [MOCK_MEMBER_1.member_id, MOCK_MEMBER_1],
-    [MOCK_MEMBER_2.member_id, MOCK_MEMBER_2]
+    [MOCK_MEMBER_1.membership_num, MOCK_MEMBER_1],
+    [MOCK_MEMBER_2.membership_num, MOCK_MEMBER_2]
 ]);
 
-export const getMemberApiCall = (memberId: string): Promise<GetMemberResponse> => {
+
+export const getMemberApiCall = async (membership_num: string): Promise<GetMemberResponse> => {
+    try {
+        const response = await axios.get(`http://localhost:5000/members?MEMBERSHIP_NUMBER=${membership_num}`)
+        const { _id, DATE, MEMBERSHIP_NUMBER, NAME, EMAIL, STUDENT_NUMBER, MEMBER_ID } = response.data[0]
+        const result: GetMemberResponse = {
+            membership_num: MEMBERSHIP_NUMBER,
+            name: NAME,
+            email: EMAIL,
+            student_number: STUDENT_NUMBER,
+            member_id: MEMBER_ID
+        }
+        return result
+    } catch(error) {
+        throw {status: 404, message: `Member ${membership_num} not found`, membership_num: membership_num}
+    }
+}
+
+export const mockGetMemberApiCall = (membership_num: string): Promise<GetMemberResponse> => {
     return new Promise<GetMemberResponse>((resolve, reject) => {
-        if (MOCK_MAP.has(memberId)) {
-            resolve(MOCK_MAP.get(memberId)!)
-        } else if (memberId === GENERIC_ERROR_ID) {
-            reject({status: 403, message: "Access Denied", member_id: memberId})
+        if (MOCK_MAP.has(membership_num)) {
+            resolve(MOCK_MAP.get(membership_num)!)
+        } else if (membership_num === GENERIC_ERROR_ID) {
+            reject({status: 403, message: "Access Denied", membership_num: membership_num})
         } else {
-            reject({status: 404, message: `Member ${memberId} not found`, member_id: memberId})
+            reject({status: 404, message: `Member ${membership_num} not found`, membership_num: membership_num})
         }
     })
 }
