@@ -153,10 +153,10 @@ app.get("/halloween", async (request, response) => {
             const results = halloweenFuse.search(nameArray[1])
             resultArr = results.map(i => i.item.name)
             resultArr.length = 10
-            return resultArr
+            response.send(resultArr)
         })
     } catch {
-        return
+        response.status(500).send("Error getting data")
     }
 })
 
