@@ -145,11 +145,13 @@ app.get("/halloween", async (request, response) => {
             query("members", request.query)
         ).then((r) => {
             const nameArray = r[0].NAME.split(" ")
+            let matching_names = []
             for (const name of halloween) {
                 if (nameArray[1] === name.last) {
-                    return name.name
+                    matching_names.push(name.name)
                 }
             }
+            if (matching_names.length) return matching_names
             const results = halloweenFuse.search(nameArray[1], 10)
             resultArr = results.map(i => i.item.name)
             response.send(resultArr)
