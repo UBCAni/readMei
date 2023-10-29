@@ -144,16 +144,17 @@ app.get("/halloween", async (request, response) => {
         await Promise.resolve(
             query("members", request.query)
         ).then((r) => {
-            const nameArray = r[0].NAME.split(" ")
+            const nameArray = r[0].NAME.split(/(?<=^\S+)\s/)
+            console.log(nameArray)
             let matching_names = []
             for (const name of halloween) {
-                if (nameArray[1] === name.last) {
+                if (nameArray[0] === name.first || nameArray[1] === name.last) {
                     matching_names.push(name.name)
                 }
             }
             if (matching_names.length) response.send(matching_names)
             else {
-            const results = halloweenFuse.search(nameArray[1], 10)
+            const results = halloweenFuse.search(nameArray[1], {limit: 10})
             resultArr = results.map(i => i.item.name)
             response.send(resultArr)}
         })
