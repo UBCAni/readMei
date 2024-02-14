@@ -1,7 +1,7 @@
 import GetMemberContainer from "./get-member/components/index/container.tsx";
 import {getMemberApiCall} from "./get-member/components/index/api.ts";
 
-function QueryMember() {
+function QueryMembers() {
   return (
     <div className="Input text-center">
       <h1 className="display-1">
@@ -12,4 +12,4 @@ function QueryMember() {
   );
 }
 
-export default QueryMember;
+export default QueryMembers;

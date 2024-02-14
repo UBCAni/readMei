@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.tsx";
 import "./scss/style.scss";
 import ErrorPage from "./error-page.tsx";
-import QueryMember from "./query-member.tsx";
+import QueryMembers from "./query-member.tsx";
 import RegistrationLogin from "./registration-login.tsx";
 
 const router = createBrowserRouter([
@@ -14,8 +14,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />
   },
   {
-    path: "/query-member",
-    element: <QueryMember />,
+    path: "/query-members",
+    element: <QueryMembers />,
     errorElement: <ErrorPage />,
   },
   {
