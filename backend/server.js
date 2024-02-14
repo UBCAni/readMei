@@ -55,7 +55,8 @@ const validData = {
         MEMBER_ID: "",
         EVENT_NAME: "",
         EVENT_DATE: "",
-        ATTENDEE_TYPE: ""
+        ATTENDEE_TYPE: "",
+        ATTENDED: ""
     }
 }
 
