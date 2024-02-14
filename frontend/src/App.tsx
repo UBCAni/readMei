@@ -1,13 +1,13 @@
-import GetMemberContainer from "./get-member/components/index/container.tsx";
-import {getMemberApiCall} from "./get-member/components/index/api.ts";
+import React from 'react';
+import { useNavigate } from "react-router-dom";
 
 function App() {
   return (
     <div className="Input text-center">
-      <h1 className="display-1">
-        read<span className="text-blue">メイ</span>
-      </h1>
-        <GetMemberContainer getMember={getMemberApiCall}/>
+      <button onClick={() => {}}>Register for Events</button>
+      <button>Event Info</button>
+      <button>Exec and Volunteer Login</button>
+      <button>UBCANI Website</button>
     </div>
   );
 }
