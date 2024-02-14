@@ -8,10 +8,13 @@ function App() {
   }
   return (
     <div className="Input text-center">
-      <button onClick={() => {}}>Register for Events</button>
-      <button onClick={() => {}}>Event Info</button>
-      <button onClick={() => {onclick("/registration-login")}}>Exec and Volunteer Login</button>
-      <button onClick={() => {}}>UBCANI Website</button>
+      <button onClick={() => {
+        window.location.href = "https://www.ubcani.com/events/info/";
+      }}>Event Info</button>
+      <button onClick={() => {onclick("/registration-login")}}>View databases</button>
+      <button onClick={() => {
+        window.location.href = "https://ubcani.com/";
+      }}>UBCANI Website</button>
     </div>
   );
 }
