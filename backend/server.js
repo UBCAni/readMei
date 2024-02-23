@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const { MongoClient } = require("mongodb");
@@ -5,10 +7,18 @@ const fs = require("fs");
 const csv_parse = require("csv-parse");
 const Fuse = require("fuse.js")
 
+
 const app = express();
 const PORT = process.env.PORT || 5000
+
+// routers
+const memberRoutes = require("./routes/members");
+const eventRoutes = require("./routes/events");
+
 app.use(cors())
 app.use(express.json())
+app.use("/members", memberRoutes);
+app.use("/events", eventRoutes);
 
 app.listen(PORT, () => {
     console.log("App is running on port " + PORT)
@@ -61,26 +71,26 @@ const validData = {
 }
 
 // secret key
-let url = fs.readFileSync("./secret.txt", {encoding: "utf8"})                                                                                                                                  
+let url = process.env.CONN;                                                                                                                                 
 
 // Connect to your Atlas cluster
-const client = new MongoClient(url);
-async function ready() {
-    try {
-        await client.connect().then(() => {
-            db = client.db("UBCANI")
-            collections.members = db.collection("members")
-            collections.events = db.collection("events")
-        })
-    } catch (err) {
-        throw err
-    }
-    // stop if variable gets assigned, but to undefined
-    if (db === undefined) throw new Error
-    if (collections.members === undefined || collections.events === undefined) throw new Error
+// const client = new MongoClient(url);
+// async function ready() {
+//     try {
+//         await client.connect().then(() => {
+//             db = client.db("UBCANI")
+//             collections.members = db.collection("members")
+//             collections.events = db.collection("events")
+//         })
+//     } catch (err) {
+//         throw err
+//     }
+//     // stop if variable gets assigned, but to undefined
+//     if (db === undefined) throw new Error
+//     if (collections.members === undefined || collections.events === undefined) throw new Error
 
-    return true
-}
+//     return true
+// }
 
 // temporary halloween stuff
 let halloween = []
@@ -91,9 +101,9 @@ loadHalloweenData(() => {
 })
 
 // connect to atlas
-ready().then(() => {
-    console.log("Successfully connected to Atlas")
-})
+// ready().then(() => {
+//     console.log("Successfully connected to Atlas")
+// })
 
 
 
@@ -102,43 +112,8 @@ app.get("/test", (request, response) => {
     response.send("hi from server")
 })
 
-// members route
-app.get("/members", async (request, response) => {
-    try {
-        await Promise.resolve(
-            query("members", request.query)
-        ).then((r) => {
-            r.length ? response.send(r) : response.status(404).send("No records found")
-        })
-    } catch {
-        response.status(404).send("Bad query")
-    }
-})
 
-app.post("/members", async (request, response) => {
-    try {
-        await Promise.resolve(
-            write("members", request.query)
-        ).then(() => {
-            response.send("Entry added")
-        })
-    } catch {
-        response.status(500).send("Error writing record")
-    }
-})
-
-app.patch("/members", async (request, response) => {
-    try {
-        await Promise.resolve(
-            update("members", request.query)
-        ).then(() => {
-            response.send("Entry updated")
-        })
-    } catch {
-        response.status(500).send("Error updating record")
-    }
-})
-
+// not sure what to do with this yet
 app.get("/halloween", async (request, response) => {
     try {
         await Promise.resolve(
@@ -191,42 +166,6 @@ app.get("/halloween", async (request, response) => {
         })
     } catch (err) {
         response.status(500).send("Error getting data")
-    }
-})
-
-app.get("/events", async (request, response) => {
-    try {
-        await Promise.resolve(
-            query("events", request.query)
-        ).then((r) => {
-            r.length ? response.send(r) : response.status(404).send("No records found")
-        })
-    } catch {
-        response.status(404).send("Bad query")
-    }
-})
-
-app.post("/events", async (request, response) => {
-    try {
-        await Promise.resolve(
-            write("events", request.query)
-        ).then(() => {
-            response.send("Entry added")
-        })
-    } catch {
-        response.status(500).send("Error writing record")
-    }
-})
-
-app.patch("/events", async (request, response) => {
-    try {
-        await Promise.resolve(
-            update("events", request.query)
-        ).then(() => {
-            response.send("Entry updated")
-        })
-    } catch {
-        response.status(500).send("Error updating record")
     }
 })
 

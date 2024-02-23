@@ -1,3 +1,4 @@
 secret.txt
 node_modules
 data.csv
+.env
