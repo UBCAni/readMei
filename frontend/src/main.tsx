@@ -6,6 +6,7 @@ import "./scss/style.scss";
 import ErrorPage from "./error-page.tsx";
 import QueryMembers from "./query-member.tsx";
 import RegistrationLogin from "./registration-login.tsx";
+import HomePage from "./home-page.tsx";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,11 @@ const router = createBrowserRouter([
   {
     path: "/registration-login",
     element: <RegistrationLogin />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: "/home-page",
+    element: <HomePage />,
     errorElement: <ErrorPage />
   }
 ]);

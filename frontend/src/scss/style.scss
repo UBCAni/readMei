@@ -71,3 +71,33 @@ body {
 .background-blue {
   background: #32A2D2;
 }
+
+.alert {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background-color: #f44336; /* Red color */
+  color: white;
+  border-radius: 5px;
+}
+
+.show {
+  animation: fadeAlertIn 0.5s forwards;
+}
+
+.hide {
+  animation: fadeAlertOut 0.5s forwards;
+}
+
+@keyframes fadeAlertIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeAlertOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
