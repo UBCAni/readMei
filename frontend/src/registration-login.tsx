@@ -47,7 +47,7 @@ export function RegistrationLogin() {
     <>
       <div className="Input text-center">
       <h1 className="display-1">
-        <span className="text-blue">ReadMei</span>
+        <h4 className="text-blue">ReadMei</h4>
       </h1>
       <form onSubmit={handleSubmit}>
         <br></br>

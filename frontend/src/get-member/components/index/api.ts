@@ -68,7 +68,7 @@ export const mockGetMemberApiCall = (membership_num: string): Promise<GetMemberR
 
 export const verifyCredentials = (email: string, pw: string): Promise<boolean> => {
     return new Promise<boolean>((resolve, reject) => {
-        resolve(false);
+        resolve(true);
         // stub, add logic here
     })
 }
