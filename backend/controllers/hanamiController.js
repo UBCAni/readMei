@@ -5,6 +5,7 @@ const validData = {
         EMAIL: "",
         TYPE_OF_TICKET: "",
         BOUGHT_OPTIONAL_TIP: "",
+        NUMBER_OF_TICKET_BOUGHT: "",
         CHECKED_IN: ""
     }
 

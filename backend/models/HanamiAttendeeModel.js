@@ -18,6 +18,9 @@ const HanamiAttendeeSchema = new Schema({
     BOUGHT_OPTIONAL_TIP: {
         type: Boolean,
     },
+    NUMBER_OF_TICKET_BOUGHT: {
+        type: Number,  
+    },
     CHECKED_IN: {
         type: Boolean,
     }
