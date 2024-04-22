@@ -3,6 +3,7 @@ import { InputEvent } from "../../../common/interfaces.ts";
 import GetMember from "./get-member.tsx";
 import { GetMemberResponse, GetMemberError } from "./interfaces.ts";
 import { convertInput } from "../../../common/utils/convertInput.ts";
+import ReadMeiNavBar from "../../tool-page-components/navBar.tsx";
 
 interface GetMemberContainerProps {
     getMember: (membershipNum: string) => Promise<GetMemberResponse>
@@ -41,13 +42,16 @@ const GetMemberContainer = (props:GetMemberContainerProps): ReactElement => {
         setMembershipNum("")
     }
     return (
-        <GetMember onSubmit={handleSubmit}
-                    inputText={membershipNum}
-                    onChange={handleChange}
-                    response={response}
-                    error={error}
-                    membershipNum={error?.membership_num}
-        />
+        <>
+            <ReadMeiNavBar></ReadMeiNavBar>
+            <GetMember onSubmit={handleSubmit}
+                inputText={membershipNum}
+                onChange={handleChange}
+                response={response}
+                error={error}
+                membershipNum={error?.membership_num}
+            />
+        </>
     )
 }
 

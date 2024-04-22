@@ -1,14 +1,10 @@
-import GetMemberContainer from "./get-member/components/index/container.tsx";
-import {getMemberApiCall} from "./get-member/components/index/api.ts";
+import { getMemberApiCall } from "./tool-pages/user-search/index/api.ts";
+import GetMemberContainer from "./tool-pages/user-search/index/container.tsx";
 
 function App() {
   return (
-    <div className="Input text-center">
-      <h1 className="display-1">
-        read<span className="text-blue">メイ</span>
-      </h1>
-        <GetMemberContainer getMember={getMemberApiCall}/>
-    </div>
+    // Configure home page here by setting it so some tool page component
+    <GetMemberContainer getMember={getMemberApiCall}/>
   );
 }
 

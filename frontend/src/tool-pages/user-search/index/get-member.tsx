@@ -1,5 +1,5 @@
 import {FormEventHandler, ReactElement} from "react";
-import Input from "../../../common/components/input";
+import Input from "../../../common/components/input/index.ts";
 import Display from "../display/display.tsx";
 import {GetMemberResponse, GetMemberError} from "./interfaces.ts";
 import {InputEvent} from "../../../common/interfaces.ts";
@@ -15,6 +15,10 @@ interface GetMemberProps {
 const GetMember = (props: GetMemberProps): ReactElement => {
 
     return (
+        <div className="Input text-center">
+        <h1 className="display-1">
+          read<span className="text-blue">メイ</span>
+        </h1>
         <div>
             <div className="row g-3">
                 <div className="col-sm"></div>
@@ -35,6 +39,7 @@ const GetMember = (props: GetMemberProps): ReactElement => {
                      response={props.response}
                      error={props.error}/>
         </div>
+      </div>
     )
 }
 
