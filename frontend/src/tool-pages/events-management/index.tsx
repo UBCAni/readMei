@@ -8,7 +8,10 @@ function EventManageMentView(): ReactElement {
     return (
         <>
             <ReadMeiNavBar></ReadMeiNavBar>
-            <ToolViewContainer></ToolViewContainer>
+            <ToolViewContainer>
+
+                
+            </ToolViewContainer>
         </>
     );
 
