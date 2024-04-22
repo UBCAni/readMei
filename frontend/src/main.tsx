@@ -4,11 +4,24 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.tsx";
 import "./scss/style.scss";
 import ErrorPage from "./error-page.tsx";
+import GetMemberContainer from "./tool-pages/user-search/index/container.tsx";
+import { getMemberApiCall } from "./tool-pages/user-search/index/api.ts";
+import TemplatedTool from "./tool-pages/tool-template/index.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/member-search",
+    element: <GetMemberContainer getMember={getMemberApiCall}/>,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/tool-template",
+    element: <TemplatedTool></TemplatedTool>,
     errorElement: <ErrorPage />,
   },
 ]);
