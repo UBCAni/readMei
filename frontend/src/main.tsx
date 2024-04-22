@@ -7,6 +7,7 @@ import ErrorPage from "./error-page.tsx";
 import GetMemberContainer from "./tool-pages/user-search/index/container.tsx";
 import { getMemberApiCall } from "./tool-pages/user-search/index/api.ts";
 import TemplatedTool from "./tool-pages/tool-template/index.tsx";
+import EventManageMentView from "./tool-pages/events-management/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,11 @@ const router = createBrowserRouter([
   {
     path: "/member-search",
     element: <GetMemberContainer getMember={getMemberApiCall}/>,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/events-manage",
+    element: <EventManageMentView></EventManageMentView>,
     errorElement: <ErrorPage />,
   },
   {

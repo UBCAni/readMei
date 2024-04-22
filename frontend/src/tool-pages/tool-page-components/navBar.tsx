@@ -13,7 +13,8 @@ const ReadMeiNavBar = (): ReactElement => {
         <Nav className="ml-auto p-2">
           <Nav.Link href="/">Home</Nav.Link>
           <Nav.Link href="/member-search">User Search</Nav.Link>
-          <Nav.Link href="/tool-template">Tool Template</Nav.Link>
+          <Nav.Link href="/events-manage">Manage Events</Nav.Link>
+          {/* <Nav.Link href="/tool-template">Tool Template</Nav.Link> */}
 
           {/* Add links to more tools as navlinks here*/}
         </Nav>
