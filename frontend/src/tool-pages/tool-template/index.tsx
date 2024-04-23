@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import ReadMeiNavBar from "../tool-page-components/navBar";
+import ReadMeiNavBar from "../tool-page-components/NavBar";
 import ToolViewContainer from "../tool-page-components/ToolViewContainer";
 
 

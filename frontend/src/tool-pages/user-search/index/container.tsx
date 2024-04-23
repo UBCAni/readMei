@@ -3,7 +3,7 @@ import { InputEvent } from "../../../common/interfaces.ts";
 import GetMember from "./get-member.tsx";
 import { GetMemberResponse, GetMemberError } from "./interfaces.ts";
 import { convertInput } from "../../../common/utils/convertInput.ts";
-import ReadMeiNavBar from "../../tool-page-components/navBar.tsx";
+import ReadMeiNavBar from "../../tool-page-components/NavBar.tsx";
 
 interface GetMemberContainerProps {
     getMember: (membershipNum: string) => Promise<GetMemberResponse>
