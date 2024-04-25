@@ -40,6 +40,7 @@ const EventSelecter = (props: EventSelecterProps): ReactElement => {
     <div >
       <input
         className="w-100"
+        placeholder="Enter Event Name..."
         type="text"
         value={dataSetId}
         onChange={handleChange}
