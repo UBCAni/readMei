@@ -62,10 +62,25 @@ function EventManageMentView(): ReactElement {
                         </div>
                     </div>
                     <div className="bg-light border p-3">
+                        {/* info panel */}
                         <h5>Information</h5>
                         <h6>Event Date: {currentDataSet.date.toLocaleDateString()}, {currentDataSet.date.toTimeString()}</h6>
                         <h6>Registered Attendees: {currentDataSet.attendeeList.length}</h6>
                         <h6>Current Attendance: {currentDataSet.attendeeList.filter(attendee => attendee.checkedIn).length} / {currentDataSet.attendeeList.length}</h6>
+                        <div className="bg-light d-flex">
+                            <div className="border p-3">
+                                <h6 className="me-5">Enter Name, email or scan card: </h6>
+                                <input placeholder="Enter query..." className="w-100"></input>
+                                {/* display attendee entry field */}
+                                <div className="background-light-grey mt-3" style={{minHeight: '350px',  maxHeight: '350px'}}>
+
+                                </div>
+                            </div>
+                            <div className="border p-3 ms-3">
+                                <h5 className="">Selected Attendee</h5>
+                                
+                            </div>
+                        </div>
                     </div>
                     {/* {currentDataSet.eventName}, <br></br>
                     {currentDataSet.date.toString()} <br></br> <br></br>
