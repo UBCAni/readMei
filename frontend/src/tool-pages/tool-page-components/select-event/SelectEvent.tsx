@@ -1,10 +1,16 @@
 import {useState , ReactElement } from "react";
 
-const EventSelecter = (props: any): ReactElement => {
+interface EventSelecterProps {
+    options: string[],
+    onValidSelect: (selectedDatasetName: string) => void,
+
+}
+
+const EventSelecter = (props: EventSelecterProps): ReactElement => {
     const [dataSetId, setDatasetId] = useState('');
     const [showDropdown, setShowDropdown] = useState(false);
     const [showError, setShowError] = useState(false);
-    const [options] = useState(['Hanami','Hanami-2022','Hanami-2023','Hanami-2024', 'Halloween', 'Christmas Party']);
+    const [options] = useState(props.options);
 
     const handleChange = (event: any) => {
         setDatasetId(event.target.value);
@@ -25,7 +31,9 @@ const EventSelecter = (props: any): ReactElement => {
             setShowError(false);
         }
 
-        
+        // valid selection
+        props.onValidSelect(dataSetId);
+
     }
 
     return (<>
@@ -47,7 +55,7 @@ const EventSelecter = (props: any): ReactElement => {
           ))}
         </div>
       )}
-      <button type="submit" onClick = {processSubmit} className="btn btn-lg text-white background-blue mt-4 w-100">Manage Event Data</button>
+      <button type="submit" onClick = {processSubmit} className="btn btn-lg text-white bg-primary mt-4 w-100">Manage Event Data</button>
       {showError && <h6 className="text-center text-danger">Invalid Dataset name!</h6>}
     </div>
     </>);
