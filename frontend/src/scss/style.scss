@@ -75,3 +75,19 @@ body {
 .background-light-grey {
   background: #e8e6e6;
 }
+
+.background-offwhite {
+  background: #f5f5f5;
+}
+
+.overflow-ellipsis {
+  text-overflow: ellipsis;
+}
+
+.scrollable {
+  overflow-y: auto;
+}
+
+.warning-icon {
+    color: rgb(255, 166, 0); 
+}

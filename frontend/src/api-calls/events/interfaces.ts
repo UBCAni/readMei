@@ -11,7 +11,7 @@ export interface EventAttendee {
     ticketType: string,
     boughtTip: boolean,
     checkedIn: boolean,
-    membershipNum?: number,
+    overrideAlert?: boolean;
 }
 
 // responses

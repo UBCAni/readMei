@@ -8,7 +8,6 @@ const attendee1: EventAttendee = {
     ticketType: "standard",
     boughtTip: true,
     checkedIn: false,
-    membershipNum: 1
 }
 
 const attendee2: EventAttendee = {
@@ -17,7 +16,6 @@ const attendee2: EventAttendee = {
     ticketType: "VIP",
     boughtTip: false,
     checkedIn: false,
-
 }
 
 const attendee3: EventAttendee = {

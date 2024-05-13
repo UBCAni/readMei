@@ -2,14 +2,19 @@ import { useState, ReactElement } from "react";
 import ReadMeiNavBar from "../tool-page-components/NavBar";
 import ToolViewContainer from "../tool-page-components/ToolViewContainer";
 import EventSelecter from "../tool-page-components/select-event/SelectEvent";
-import { EventData, GetEventListResponse } from "../../api-calls/events/interfaces";
+import { EventData, GetEventListResponse, EventAttendee} from "../../api-calls/events/interfaces";
 import { getEventDetailsMockCall, getEventListMockCall } from "../../api-calls/events/routes";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { Alert } from "react-bootstrap";
 
 
 
 function EventManageMentView(): ReactElement {
     const [currentDataSet, setDataSet] = useState<undefined | EventData>(undefined);
     const evtList: string[] = [];
+    const [currentAttendeeQuery, setAttdendeeQuery] = useState('');
+    const [currentSelectedAttendee, setViewAttendee] = useState<undefined | EventAttendee>(undefined);
     // todo: change this later to real call
     getEventListMockCall().then((resp: GetEventListResponse) => {
         const toAdd = resp.res != undefined ? resp.res : [""];
@@ -33,6 +38,24 @@ function EventManageMentView(): ReactElement {
 
     const onDataDeselect = () => {
         setDataSet(undefined);
+    }
+
+    const onAttendeeQueryChange = (evt: any) => {
+        setAttdendeeQuery(evt.target.value);
+    }
+
+    const onSelectAttendee = (attendee: EventAttendee) => {
+        setViewAttendee(attendee);
+    }
+
+    const applyQueryAttendeeFilters = (unfiltered: EventAttendee[]): EventAttendee[] => {
+        // get name matches
+        const nameMatches = unfiltered.filter(attendee => attendee.name.includes(currentAttendeeQuery));
+        // get email matches
+        const emailMatches = unfiltered.filter(attendee => attendee.email.includes(currentAttendeeQuery));
+        // get card # matches
+        // todo
+        return [...new Set([...nameMatches, ...emailMatches])];
     }
 
     return (
@@ -70,15 +93,75 @@ function EventManageMentView(): ReactElement {
                         <div className="bg-light d-flex">
                             <div className="border p-3">
                                 <h6 className="me-5">Enter Name, email or scan card: </h6>
-                                <input placeholder="Enter query..." className="w-100"></input>
+                                      <input
+                                        className="w-100"
+                                        placeholder="Enter Query..."
+                                        type="text"
+                                        value={currentAttendeeQuery}
+                                        onChange={onAttendeeQueryChange}/>
                                 {/* display attendee entry field */}
-                                <div className="background-light-grey mt-3" style={{minHeight: '350px',  maxHeight: '350px'}}>
-
+                                <div className="background-light-grey mt-3" style={{minHeight: '350px',  maxHeight: '350px', maxWidth: '300px'}}>
+                                        <div className="row">
+                                            <div className="col">
+                                                <div className="scrollable" style={{maxHeight: '350px', maxWidth: '300px'}}>
+                                                    {applyQueryAttendeeFilters(currentDataSet.attendeeList).map((option, index) => (
+                                                        <div key={index} className="background-offwhite border p-1 overflow-ellipsis" onClick={() => onSelectAttendee(option)}>
+                                                            <div className="text-truncate">
+                                                                {option.name}<br></br>
+                                                                &lt;{option.email}&gt;
+                                                            </div>
+                                                            <div className="d-flex"> 
+                                                                {/* ticket: {option.ticketType} */}
+                                                                {/* <div className="warning-icon col">
+                                                                    <FontAwesomeIcon icon={faExclamationTriangle} className=""/>
+                                                                </div> */}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>  
+                                            </div>
+                                        </div>
                                 </div>
                             </div>
-                            <div className="border p-3 ms-3">
-                                <h5 className="">Selected Attendee</h5>
-                                
+                            <div style={{minWidth: '350px', maxWidth: '350px'}}>
+                                {/* Selected Attendee View */}
+                                <div className="border p-3 ms-3" style={{minHeight: '300px'}}>
+                                    <h5 className="">Selected Attendee</h5>
+                                    {currentSelectedAttendee == undefined && 
+                                        <div>
+                                            Select an Attendee
+                                        </div>
+                                    }
+                                    {currentSelectedAttendee != undefined && 
+                                        <div className="scrollable">
+                                            Name: {currentSelectedAttendee.name}<br></br>
+                                            Email: {currentSelectedAttendee.email} <br></br>
+                                            Ticket Type: {currentSelectedAttendee.ticketType} <br></br>
+                                            Paid: todo; get <br></br>
+                                            Bought Tip: {
+                                                String(currentSelectedAttendee.boughtTip === true ? "Yes": "No")
+                                                } <br></br>
+                                            Membership Number: todo; get<br></br>
+                                            Checked In: {
+                                                String(currentSelectedAttendee.checkedIn === true ? "Yes": "No")
+                                                }
+                                            {/* Alerts */}
+                                            <div className="">
+                                                <Alert variant="warning" className="p-0 m-0">
+                                                    <p style={{ overflowWrap:'break-word' }}>
+                                                        Placeholder: Example Alert
+                                                    </p>
+                                                </Alert>
+                                            </div>
+                                        </div>
+
+                                    }
+
+                                </div>
+                                {/* action menu*/}
+                                <div className="border p-2 ms-3 mt-2" style={{minHeight: '150px'}}>
+                                    <h6 className="">Action Menu</h6>
+                                </div>
                             </div>
                         </div>
                     </div>
