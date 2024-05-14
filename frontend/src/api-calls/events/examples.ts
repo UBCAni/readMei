@@ -55,14 +55,21 @@ const event2: EventData = {
     eventName: "Halloween",
     date: new Date("2023-10-28"),
     attendeeList: [attendee1, attendee3],
-    tiers: [Tier1, Tier2, Tier3,Tier1, Tier2, Tier3,Tier1, Tier2, Tier3]
+    tiers: [Tier1, Tier2, Tier3]
+}
+
+const event3: EventData = {
+    eventName: "Empty",
+    date: new Date("2023-03-28"),
+    attendeeList: [],
+    tiers: []
 }
 
 
 // get event list
 export const getMemberListResp1: GetEventListResponse = {
     status: 200,
-    res: ['Hanami-2023', 'Halloween']
+    res: ['Hanami-2023', 'Halloween', 'Empty']
 }
 
 export const getMemberListRespFail: GetEventListResponse = {
@@ -86,7 +93,13 @@ export const getEventResp3: GetEventDetailsResponse = {
     errMsg: "Failed to load event details."
 }
 
+export const getEventResp4: GetEventDetailsResponse = {
+    status: 400,
+    res: event3
+}
+
 export const getEventDetailMap: {[key: string]: GetEventDetailsResponse} = {
     "Hanami-2023": getEventResp1, 
-    "Halloween": getEventResp2
+    "Halloween": getEventResp2,
+    "Empty": getEventResp4
 }
