@@ -2,7 +2,9 @@
 export interface EventData {
     eventName: string,
     date: Date
-    attendeeList: EventAttendee[]
+    attendeeList: EventAttendee[],
+    tiers: EventTier[]
+
 }
 
 export interface EventAttendee {
@@ -12,6 +14,11 @@ export interface EventAttendee {
     boughtTip: boolean,
     checkedIn: boolean,
     overrideAlert?: boolean;
+}
+
+export interface EventTier {
+    tierName: string;
+    price: number;
 }
 
 // responses

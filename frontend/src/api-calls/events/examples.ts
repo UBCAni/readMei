@@ -1,4 +1,4 @@
-import { EventAttendee, EventData, GetEventDetailsResponse, GetEventListResponse } from "./interfaces";
+import { EventAttendee, EventData, EventTier, GetEventDetailsResponse, GetEventListResponse } from "./interfaces";
 
 // data type examples
 // attendee
@@ -27,17 +27,35 @@ const attendee3: EventAttendee = {
 
 }
 
+// event tiers 
+const Tier1: EventTier = {
+    tierName: "Tier 1",
+    price: 8
+}
+
+const Tier2: EventTier = {
+    tierName: "Tier 2",
+    price: 10
+}
+
+const Tier3: EventTier = {
+    tierName: "Simp",
+    price: 0
+}
+
 // events
 const event1: EventData = {
     eventName: "Hanami-2023",
     date: new Date("2023-03-28"),
-    attendeeList: [attendee1, attendee2]
+    attendeeList: [attendee1, attendee2],
+    tiers: [Tier1]
 }
 
 const event2: EventData = {
     eventName: "Halloween",
     date: new Date("2023-10-28"),
-    attendeeList: [attendee1, attendee3]
+    attendeeList: [attendee1, attendee3],
+    tiers: [Tier1, Tier2, Tier3,Tier1, Tier2, Tier3,Tier1, Tier2, Tier3]
 }
 
 

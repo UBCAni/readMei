@@ -104,7 +104,7 @@ function EventManageMentView(): ReactElement {
                                 <div className="background-light-grey mt-3" style={{minWidth: '50%', minHeight: '75%'}}>
                                         <div className="row">
                                             <div className="col">
-                                                <div className="scrollable" style={{maxHeight: '100%', maxWidth: '100%'}}>
+                                                <div className="scrollable" style={{maxHeight: '350px', maxWidth: '100%'}}>
                                                     {applyQueryAttendeeFilters(currentDataSet.attendeeList).map((option, index) => (
                                                         <div key={index} className="background-offwhite border p-1 overflow-ellipsis" onClick={() => onSelectAttendee(option)}>
                                                             <div className="text-truncate">
@@ -170,8 +170,7 @@ function EventManageMentView(): ReactElement {
                                                 {currentSelectedAttendee?.checkedIn && <>Undo Check-In</>}
                                         </button>
                                         <button 
-                                            className="btn btn-primary m-1"
-                                            disabled= {currentSelectedAttendee == undefined}>
+                                            className="btn btn-primary m-1">
                                                 Check-In Door Sale
                                         </button>
 
@@ -181,7 +180,21 @@ function EventManageMentView(): ReactElement {
                             <div style={{minWidth: '33%', minHeight: '500px'}}>
                                 <div className="border p-3 ms-3" style={{height: '100%'}}>
                                     <h5 className="">Event Details</h5>
-                                    todo
+                                    <div className="row border" >
+                                        <div className="col border font-weight-bold">Ticket Type ID</div>
+                                        <div className="col border font-weight-bold">Price</div>
+                                    </div>
+                                    <div className="row border scrollable" style={{height: '200px'}}> 
+                                        {currentDataSet.tiers.map((option, index) => (
+                                            <div className="row m-0 p-0">
+                                                <div className="col border">{option.tierName}</div>
+                                                <div className="col border">${option.price}</div>
+                                            </div>                  
+                                            ))}
+
+                                    </div>
+
+
                                 </div>
 
                             </div>
