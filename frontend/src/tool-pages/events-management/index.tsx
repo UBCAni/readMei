@@ -1,12 +1,14 @@
-import { useState, ReactElement } from "react";
+import { useState, ReactElement, useEffect } from "react";
 import ReadMeiNavBar from "../tool-page-components/NavBar";
 import ToolViewContainer from "../tool-page-components/ToolViewContainer";
 import EventSelecter from "../tool-page-components/select-event/SelectEvent";
-import { EventData, GetEventListResponse, EventAttendee} from "../../api-calls/events/interfaces";
+import { EventData, GetEventListResponse, EventAttendee, EventTier} from "../../api-calls/events/interfaces";
 import { getEventDetailsMockCall, getEventListMockCall } from "../../api-calls/events/routes";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { Alert } from "react-bootstrap";
+import { faExclamationTriangle, faL } from '@fortawesome/free-solid-svg-icons';
+import { Alert, FormCheck } from "react-bootstrap";
+import { getMemberByEmailMockCall } from "../../api-calls/members/routes";
+import { GetMemberByEmailResponse, Member } from "../../api-calls/members/interfaces";
 
 
 
@@ -15,6 +17,11 @@ function EventManageMentView(): ReactElement {
     const evtList: string[] = [];
     const [currentAttendeeQuery, setAttdendeeQuery] = useState('');
     const [currentSelectedAttendee, setViewAttendee] = useState<undefined | EventAttendee>(undefined);
+    const [alertState, setAlertState] = useState<boolean>(false);
+    const [alertString, setAlertStr] = useState<string>("");
+    const [currentMatchingMember, setMatchingMember] = useState<undefined | Member>(undefined)
+
+    
     // todo: change this later to real call
     getEventListMockCall().then((resp: GetEventListResponse) => {
         const toAdd = resp.res != undefined ? resp.res : [""];
@@ -46,6 +53,50 @@ function EventManageMentView(): ReactElement {
 
     const onSelectAttendee = (attendee: EventAttendee) => {
         setViewAttendee(attendee);
+        verifyAttendee(attendee);
+    }
+
+    const verifyAttendee = (attendee: EventAttendee) => {
+        // reset alert states
+        setAlertState(false);
+        setAlertStr("");
+        setMatchingMember(undefined);
+
+        // get matching ticket tier
+        let ticketType = undefined;
+        currentDataSet?.tiers.forEach((tier: EventTier) => {
+            if (tier.tierName === attendee.ticketType) {
+                ticketType = tier;
+            }
+        });
+
+        // if no matching ticket tier, verify it manually anhd then resolve alert
+        if (ticketType === undefined) {
+            setAlertState(true);
+            setAlertStr("No ticket tier match found, please verify manually, then resolve alert.");            
+        } 
+        
+        // if membership tiered, check if theres an email match among members to verify membership
+        //TODO: replace with real call
+        getMemberByEmailMockCall(attendee.email).then((resp: GetMemberByEmailResponse) => {
+            let fetchedMember = resp.res;
+            setMatchingMember(fetchedMember);
+            if (ticketType !== undefined) {
+                if (ticketType.membershipReq) {
+                    // //check if theres an email match in database with API call to retrieve 
+                    if (fetchedMember === undefined) {
+                        setAlertState(true);
+                        setAlertStr("No match found among member emails, please verify manually.");
+                    }             
+                }
+            }
+
+
+
+        }).catch((err) => {
+            // handle error
+        });
+
     }
 
     const applyQueryAttendeeFilters = (unfiltered: EventAttendee[]): EventAttendee[] => {
@@ -68,8 +119,8 @@ function EventManageMentView(): ReactElement {
                             <h3 className="text-center">Select an event dataset to manage</h3>
                             <EventSelecter
                                 options = {evtList}
-                                onValidSelect={onSelectDataset}
-                                ></EventSelecter>
+                                onValidSelect={onSelectDataset}>
+                            </EventSelecter>
                         </div>
                     </ToolViewContainer>
                 </div>}
@@ -138,22 +189,36 @@ function EventManageMentView(): ReactElement {
                                             Name: {currentSelectedAttendee.name}<br></br>
                                             Email: {currentSelectedAttendee.email} <br></br>
                                             Ticket Type: {currentSelectedAttendee.ticketType} <br></br>
-                                            Paid: todo; get <br></br>
                                             Bought Tip: {
                                                 String(currentSelectedAttendee.boughtTip === true ? "Yes": "No")
                                                 } <br></br>
-                                            Membership Number: todo; get<br></br>
+                                            Membership Number: {currentMatchingMember !== undefined ? 
+                                                currentMatchingMember.memberNum : "None Found"}
+                                            <br></br>
                                             Checked In: {
                                                 String(currentSelectedAttendee.checkedIn === true ? "Yes": "No")
                                                 }
                                             {/* Alerts */}
-                                            <div className="">
+                                            {alertState && <div className="">
                                                 <Alert variant="warning" className="p-0 m-0">
                                                     <p style={{ overflowWrap:'break-word' }}>
-                                                        Placeholder: Example Alert
+                                                        {alertString}
                                                     </p>
                                                 </Alert>
-                                            </div>
+                                            </div>}
+                                            {!alertState && <div className="">
+                                                <Alert variant= "success" className="p-0 m-0">
+                                                    <p style={{ overflowWrap:'break-word' }}>
+                                                        Looks good! Check in the attendee.
+                                                    </p>
+                                                </Alert>
+                                                {currentSelectedAttendee.boughtTip && <Alert variant= "primary" className="p-0 m-0">
+                                                    <p style={{ overflowWrap:'break-word' }}>
+                                                        Wow they actually tipped us. Consider thanking them!
+                                                    </p>
+                                                    </Alert>  
+                                                }                                             
+                                            </div>}
                                         </div>
 
                                     }
@@ -170,7 +235,8 @@ function EventManageMentView(): ReactElement {
                                                 {currentSelectedAttendee?.checkedIn && <>Undo Check-In</>}
                                         </button>
                                         <button 
-                                            className="btn btn-primary m-1">
+                                            className="btn btn-primary m-1"
+                                            disabled={!alertState}>
                                                 Resolve Alert
                                         </button>
                                         <button 
@@ -187,12 +253,16 @@ function EventManageMentView(): ReactElement {
                                     <div className="row border" >
                                         <div className="col border font-weight-bold">Ticket Type ID</div>
                                         <div className="col border font-weight-bold">Price</div>
+                                        <div className="col border font-weight-bold">Membership Required?</div>
                                     </div>
                                     <div className="row border scrollable" style={{height: '200px'}}> 
                                         {currentDataSet.tiers.map((option, index) => (
                                             <div className="row m-0 p-0">
                                                 <div className="col border">{option.tierName}</div>
                                                 <div className="col border">${option.price}</div>
+                                                <div className="col border">
+                                                    {option.membershipReq ? 'Yes': 'No'}
+                                                    </div>
                                             </div>                  
                                             ))}
                                     </div>

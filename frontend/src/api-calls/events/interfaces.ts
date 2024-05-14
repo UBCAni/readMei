@@ -19,6 +19,7 @@ export interface EventAttendee {
 export interface EventTier {
     tierName: string;
     price: number;
+    membershipReq: boolean;
 }
 
 // responses
