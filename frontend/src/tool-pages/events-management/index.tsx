@@ -162,11 +162,26 @@ function EventManageMentView(): ReactElement {
                                 {/* action menu*/}
                                 <div className="border p-2 ms-3 mt-2" style={{minHeight: '27.5%'}}>
                                     <h6 className="">Action Menu</h6>
+                                    <div className="d-flex justify-content-start">
+                                        <button 
+                                            className="btn btn-primary m-1"
+                                            disabled= {currentSelectedAttendee == undefined}>
+                                                {!currentSelectedAttendee?.checkedIn && <>Check In</>}
+                                                {currentSelectedAttendee?.checkedIn && <>Undo Check-In</>}
+                                        </button>
+                                        <button 
+                                            className="btn btn-primary m-1"
+                                            disabled= {currentSelectedAttendee == undefined}>
+                                                Check-In Door Sale
+                                        </button>
+
+                                    </div>
                                 </div>
                             </div>
                             <div style={{minWidth: '33%', minHeight: '500px'}}>
                                 <div className="border p-3 ms-3" style={{height: '100%'}}>
                                     <h5 className="">Event Details</h5>
+                                    todo
                                 </div>
 
                             </div>
