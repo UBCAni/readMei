@@ -64,7 +64,7 @@ function EventManageMentView(): ReactElement {
             {/* no loaded dataset view*/}
             {currentDataSet == null && <div>
                     <ToolViewContainer>
-                        <div className="d-flex flex-column" style={{ width: '40%' }}>
+                        <div className="d-flex flex-column" style={{ minWidth: '375px', maxWidth: '35%' }}>
                             <h3 className="text-center">Select an event dataset to manage</h3>
                             <EventSelecter
                                 options = {evtList}
@@ -77,11 +77,12 @@ function EventManageMentView(): ReactElement {
             {/* loaded dataset view */}
             {currentDataSet != undefined && <div>
                 <ToolViewContainer>
+                    <div style={{ minWidth: '375px', maxWidth: '85%' }}>
                     <div className="bg-light d-flex border">
                         <button className="btn btn-primary m-1"
                         onClick={onDataDeselect}>Back</button>
-                        <div className="container d-flex align-items-center">
-                        <h3 className="text-center m-0">{currentDataSet.eventName}</h3>
+                        <div className="d-flex justify-content-start align-items-center">
+                            <h3 className="text-center m-0 ">{currentDataSet.eventName}</h3>
                         </div>
                     </div>
                     <div className="bg-light border p-3">
@@ -91,7 +92,7 @@ function EventManageMentView(): ReactElement {
                         <h6>Registered Attendees: {currentDataSet.attendeeList.length}</h6>
                         <h6>Current Attendance: {currentDataSet.attendeeList.filter(attendee => attendee.checkedIn).length} / {currentDataSet.attendeeList.length}</h6>
                         <div className="bg-light d-flex">
-                            <div className="border p-3">
+                            <div className="border p-3" style={{minWidth: '33%',minHeight: '500px'}}>
                                 <h6 className="me-5">Enter Name, email or scan card: </h6>
                                       <input
                                         className="w-100"
@@ -100,10 +101,10 @@ function EventManageMentView(): ReactElement {
                                         value={currentAttendeeQuery}
                                         onChange={onAttendeeQueryChange}/>
                                 {/* display attendee entry field */}
-                                <div className="background-light-grey mt-3" style={{minHeight: '350px',  maxHeight: '350px', maxWidth: '300px'}}>
+                                <div className="background-light-grey mt-3" style={{minWidth: '50%', minHeight: '75%'}}>
                                         <div className="row">
                                             <div className="col">
-                                                <div className="scrollable" style={{maxHeight: '350px', maxWidth: '300px'}}>
+                                                <div className="scrollable" style={{maxHeight: '100%', maxWidth: '100%'}}>
                                                     {applyQueryAttendeeFilters(currentDataSet.attendeeList).map((option, index) => (
                                                         <div key={index} className="background-offwhite border p-1 overflow-ellipsis" onClick={() => onSelectAttendee(option)}>
                                                             <div className="text-truncate">
@@ -123,9 +124,9 @@ function EventManageMentView(): ReactElement {
                                         </div>
                                 </div>
                             </div>
-                            <div style={{minWidth: '350px', maxWidth: '350px'}}>
+                            <div style={{minWidth: '33%', minHeight: '500px'}}>
                                 {/* Selected Attendee View */}
-                                <div className="border p-3 ms-3" style={{minHeight: '300px'}}>
+                                <div className="border p-3 ms-3" style={{minHeight: '70%'}}>
                                     <h5 className="">Selected Attendee</h5>
                                     {currentSelectedAttendee == undefined && 
                                         <div>
@@ -159,9 +160,15 @@ function EventManageMentView(): ReactElement {
 
                                 </div>
                                 {/* action menu*/}
-                                <div className="border p-2 ms-3 mt-2" style={{minHeight: '150px'}}>
+                                <div className="border p-2 ms-3 mt-2" style={{minHeight: '27.5%'}}>
                                     <h6 className="">Action Menu</h6>
                                 </div>
+                            </div>
+                            <div style={{minWidth: '33%', minHeight: '500px'}}>
+                                <div className="border p-3 ms-3" style={{height: '100%'}}>
+                                    <h5 className="">Event Details</h5>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -173,6 +180,18 @@ function EventManageMentView(): ReactElement {
                             {entry.name}
                             </div>
                         ))} */}
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
 
 
 
