@@ -171,6 +171,10 @@ function EventManageMentView(): ReactElement {
                                         </button>
                                         <button 
                                             className="btn btn-primary m-1">
+                                                Resolve Alert
+                                        </button>
+                                        <button 
+                                            className="btn btn-primary m-1">
                                                 Check-In Door Sale
                                         </button>
 
@@ -191,9 +195,21 @@ function EventManageMentView(): ReactElement {
                                                 <div className="col border">${option.price}</div>
                                             </div>                  
                                             ))}
+                                    </div>
+                                    <div className="d-flex">
+                                        <button 
+                                            className="btn btn-primary m-1 col">
+                                                Add Tier
+                                        </button>
+                                        <button 
+                                            className="btn btn-primary m-1 col"
+                                            disabled= {currentDataSet.tiers.length == 0}
+                                            >
+                                                Remove Tier
+                                        </button>
+
 
                                     </div>
-
 
                                 </div>
 
