@@ -38,7 +38,8 @@ export const getMemberApiCall = async (membership_num: string): Promise<GetMembe
         const response2 = await axios.get(`http://localhost:5000/halloween?MEMBERSHIP_NUMBER=${membership_num}`)
         //console.log(response2)
         const response = await axios.get(`http://localhost:5000/members?MEMBERSHIP_NUMBER=${membership_num}`)
-        const { _id, DATE, MEMBERSHIP_NUMBER, NAME, EMAIL, STUDENT_NUMBER, MEMBER_ID } = response.data[0]
+        // the line below was const { _id, DATE, MEMBERSHIP_NUMBER, NAME, EMAIL, STUDENT_NUMBER, MEMBER_ID } = response.data[0]
+        const { MEMBERSHIP_NUMBER, NAME, EMAIL, STUDENT_NUMBER, MEMBER_ID } = response.data[0]
         const PAYMENT_MATCHES = response2.data
         const result: GetMemberResponse = {
             membership_num: MEMBERSHIP_NUMBER,

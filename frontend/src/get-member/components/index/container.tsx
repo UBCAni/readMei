@@ -12,9 +12,11 @@ const GetMemberContainer = (props:GetMemberContainerProps): ReactElement => {
     const [response, setResponse] = useState<GetMemberResponse | null>(null)
     const [error, setError] = useState<GetMemberError | null>(null)
 
-    const handleMembershipNum = (membershipNum: string) => {
-        setMembershipNum(membershipNum)
-    }
+    // seem like this is not needed
+    // const handleMembershipNum = (membershipNum: string) => {
+    //     setMembershipNum(membershipNum)
+    // }
+    
     const handleResponse = (response: GetMemberResponse) => {
         setResponse(response)
         setError(null)
