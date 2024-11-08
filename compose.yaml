@@ -1,0 +1,14 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app   # Mounts your project folder without node_modules
+      - /app/node_modules  # Ensures node_modules in container is used
+    environment:
+      - NODE_ENV=development
+      - VITE_HOST=0.0.0.0  # Add this line to allow access from outside the container
+    command: npm run dev
